@@ -1,6 +1,6 @@
 # Screenshots
 
-These screenshots were supplied by the project maintainer to show the Android app and example guest software. Guest operating systems and games are not included with the app.
+These screenshots were supplied by the project maintainer and captured on a **Samsung Galaxy Tab S11 Ultra**. They show the Android app and example guest software. Guest operating systems and games are not included with the app.
 
 | View | Image |
 | --- | --- |
@@ -20,7 +20,7 @@ These screenshots were supplied by the project maintainer to show the Android ap
 
 # Deutsch
 
-Diese vom Projektbetreiber bereitgestellten Screenshots zeigen die Android-App und beispielhaft ausgeführte Gastsoftware. Die abgebildeten Gastbetriebssysteme und Spiele sind nicht in der App enthalten.
+Diese vom Projektbetreiber bereitgestellten Screenshots wurden auf einem **Samsung Galaxy Tab S11 Ultra** aufgenommen. Sie zeigen die Android-App und beispielhaft ausgeführte Gastsoftware. Die abgebildeten Gastbetriebssysteme und Spiele sind nicht in der App enthalten.
 
 | Ansicht | Bild |
 | --- | --- |

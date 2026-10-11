@@ -15,7 +15,7 @@ An independent Android port of [86Box](https://github.com/86Box/86Box), packaged
   </tr>
 </table>
 
-[View all 13 screenshots](SCREENSHOTS.md). Guest operating systems and games shown are examples; they are not included with the app.
+[View all 13 screenshots](SCREENSHOTS.md). The screenshots were captured on a **Samsung Galaxy Tab S11 Ultra**. Guest operating systems and games shown are examples; they are not included with the app.
 
 ## Download and install
 
@@ -56,7 +56,7 @@ The source package was audited before this publication, but this publication did
 
 ## Bilder
 
-Die Beispielbilder oben zeigen unter anderem den emulierten Desktop, Hardwareprofile, den Hardwarekonfigurator und die anpassbare Spielsteuerung. [Alle 13 Screenshots ansehen](SCREENSHOTS.md). Die abgebildeten Gastbetriebssysteme und Spiele sind Beispiele und nicht in der App enthalten.
+Die Beispielbilder oben zeigen unter anderem den emulierten Desktop, Hardwareprofile, den Hardwarekonfigurator und die anpassbare Spielsteuerung. [Alle 13 Screenshots ansehen](SCREENSHOTS.md). Die Screenshots wurden auf einem **Samsung Galaxy Tab S11 Ultra** aufgenommen. Die abgebildeten Gastbetriebssysteme und Spiele sind Beispiele und nicht in der App enthalten.
 
 ## Herunterladen und installieren
 

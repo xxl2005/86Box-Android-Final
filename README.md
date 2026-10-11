@@ -1,6 +1,6 @@
 # 86Box Android Final
 
-An independent Android port of [86Box](https://github.com/86Box/86Box), packaged here as the **v0.11.1 Preview**. This repository contains the complete source tree from the prepared v0.11.1 source package, including the Android app, native emulator core, build scripts, tests, and bundled third-party source. The original upstream README is preserved as [README_UPSTREAM.md](README_UPSTREAM.md).
+An independent Android port of [86Box](https://github.com/86Box/86Box), packaged here as the **v0.11.1 Preview**. This repository contains all application and emulator source files from the prepared v0.11.1 package, including the Android app, native core, build scripts, tests, and bundled third-party source. Six GitHub Actions workflow definitions from the ZIP are omitted. The original upstream README is preserved as [README_UPSTREAM.md](README_UPSTREAM.md).
 
 ## Download and install
 
@@ -37,7 +37,7 @@ The source package was audited before this publication, but this publication did
 
 # Deutsch
 
-**86Box Android Final** ist ein unabhängiger Android-Port von [86Box](https://github.com/86Box/86Box). Hier wird er als **v0.11.1 Preview** bereitgestellt. Das Repository enthält den vollständigen Quellbaum des vorbereiteten v0.11.1-Pakets: Android-App, nativen Emulator-Kern, Build-Skripte, Tests und mitgelieferten Quellcode von Drittkomponenten. Die ursprüngliche README liegt unter [README_UPSTREAM.md](README_UPSTREAM.md).
+**86Box Android Final** ist ein unabhängiger Android-Port von [86Box](https://github.com/86Box/86Box). Hier wird er als **v0.11.1 Preview** bereitgestellt. Das Repository enthält alle App- und Emulator-Quelldateien des vorbereiteten v0.11.1-Pakets: Android-App, nativen Kern, Build-Skripte, Tests und mitgelieferten Quellcode von Drittkomponenten. Sechs GitHub-Actions-Workflowdefinitionen aus dem ZIP sind ausgenommen. Die ursprüngliche README liegt unter [README_UPSTREAM.md](README_UPSTREAM.md).
 
 ## Herunterladen und installieren
 

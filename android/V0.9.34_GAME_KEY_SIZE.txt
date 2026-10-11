@@ -1,0 +1,9 @@
+86Box Android v0.9.34
+
+Game Key Overlay:
+- Every overlay key now has its own independent size setting.
+- "-" makes only that key smaller.
+- "+" makes only that key larger.
+- Range: 50% to 200%, in 10% steps.
+- Per-key size is stored persistently together with the existing overlay settings.
+- Existing MOVE MODE, HOLD mode, positions and background opacity remain supported.

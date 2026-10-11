@@ -1,0 +1,32 @@
+86Box Android v0.9.4 - Desktop CPU Profile Fix Validation
+==========================================================
+
+Scope:
+- Imported desktop profile CPU selection in Hardware Configurator
+- cpu_speed + cpu_multi matching
+- Desktop-compatible CPU fallback behavior
+- Version/build-output consistency
+
+Audit round 1: PASS
+- Exact 200000000 Hz + multiplier 3 selects 200 MHz CPU.
+- Same speed with different multiplier selects matching multiplier.
+- Missing exact speed uses first eligible CPU >= requested speed.
+- Requested speed above available range uses last/fastest eligible CPU.
+- Missing multiplier retains same-speed fallback behavior.
+
+Audit round 2: PASS
+- HardwareConfigActivity loads cpu_multi together with cpu_speed.
+- CPU spinner uses dedicated setCpuSpeedAdapter().
+- Old CPU-specific setNativeAdapter(... preferredSpeed) path removed.
+- SAVE still writes both cpu_speed and cpu_multi.
+- versionCode = 39, versionName = 0.9.4.
+- BUILD_APK.bat output names changed to v0.9.4.
+
+Audit round 3: PASS
+- Final archive integrity checked with unzip -t.
+- No zero-byte Java/C/C++ source files.
+- No duplicate case-insensitive archive paths.
+- Only intended source/build-version changes plus v0.9.4 documentation.
+
+Note:
+A full Android APK build still requires the user's Windows Android SDK/NDK/vcpkg environment.

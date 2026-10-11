@@ -1,0 +1,28 @@
+86Box Android v0.9.10 - Touchpad Gesture Validation
+===================================================
+
+Scope
+-----
+Touch-only update on top of v0.9.9. Physical mouse auto-capture and VM picker keepalive are unchanged.
+
+Implemented
+-----------
+- One-finger swipe: relative guest mouse movement (existing path retained).
+- Single short tap: one left click.
+- Double short tap: two distinct left-click gestures for guest double-click handling.
+- One-finger stationary hold >= 2000 ms: right click while held.
+- Release after long press does not emit a left click.
+- Existing two-finger tap right click retained.
+- Existing pinch zoom / two-finger pan retained.
+- Touch setting text updated to describe all gestures.
+
+Audit rounds
+------------
+1. Structural/source sanity: PASS.
+2. Gesture regression harness + SDL event integration + clean diff: PASS.
+3. Package/version/ZIP integrity: performed when COMPLETE ZIP is generated.
+
+Version
+-------
+versionCode: 45
+versionName: 0.9.10

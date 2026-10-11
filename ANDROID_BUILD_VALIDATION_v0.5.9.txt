@@ -1,0 +1,14 @@
+86Box Android v0.6.0 - BUILD VALIDATION
+=============================================
+
+Static validation:
+- versionName 0.5.13 / versionCode 15
+- ARM64 + x86_64 Universal build flow present
+- physical no-space NDK copy present
+- SDL3_SOURCE_DIR is passed to CMake with forward slashes
+- SDL external source patch normalizes SDL3_SOURCE_DIR/CMAKE_MODULE_PATH
+- GLib GDB auto-load install patch is automatic
+- ZLIB::ZLIB compatibility target is present
+- CMP0219 conditional NEW policy is present
+
+External SDL3/vcpkg/Gradle components are downloaded on first build.

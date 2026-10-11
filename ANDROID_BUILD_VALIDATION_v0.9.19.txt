@@ -1,0 +1,19 @@
+86Box Android v0.9.19 validation
+
+Round 1 - Host performance scroll UI
+PASS: entire Host performance content is wrapped in ScrollView.
+PASS: detected host, MANUAL CORES, hint text and all performance modes are inside the scrollable panel.
+PASS: Java structural brace/string scan passed.
+
+Round 2 - Regression / diff
+PASS: only Box86Activity.java plus version files changed from v0.9.18.
+PASS: HostPerformanceTuner.java unchanged.
+PASS: android_bridge.c unchanged.
+PASS: VmKeepAliveService.java unchanged.
+
+Round 3 - package integrity
+PASS: versionName 0.9.19 / versionCode 54.
+PASS: final package root is 86Box-Android-v0.9.19.
+PASS: no zero-byte source files.
+PASS: no case-insensitive path collisions.
+PASS: archive integrity verified after packaging.

@@ -1,0 +1,3 @@
+Lege hier vor dem APK-Build deinen eigenen 86Box-ROM-Satz ab.
+Unterordner werden mit in die APK gepackt und beim ersten Start kopiert.
+ROM-Dateien sind aus Lizenz-/Copyright-Gruenden nicht enthalten.

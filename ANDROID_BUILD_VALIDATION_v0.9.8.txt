@@ -1,0 +1,61 @@
+86Box Android v0.9.8 - validation report
+=========================================
+
+Source basis: v0.9.7 COMPLETE
+Version: 0.9.8
+versionCode: 43
+
+Input log diagnosis (v0.9.7 COMPLETE APP LOG)
+----------------------------------------------
+- Win98SeLight configuration remains correct:
+  machine=cubx
+  cpu_family=celeron_mendocino
+  cpu_speed=200000000
+  cpu_multi=3
+  mouse_type=ps2
+- Hardware Configurator initially selects 200 MHz correctly.
+- After the old startup suppression is released, queued Spinner callbacks rebuild the CPU list.
+- A rebuild with preferredSpeed/preferredMulti = null falls back to row 0 = 66 MHz.
+- Therefore the profile/core data is correct; the 66 MHz symptom is a UI callback ordering issue.
+- No physical-mouse event trace existed in the v0.9.7 diagnostic data, so v0.9.8 adds traces at Android and native input layers.
+- Independent profile issue: a desktop CD-ROM path still points to /home/tobias/.../LLGD1.cue and cannot be mounted on Android. One session also reports missing libaaruformat.so for that image load attempt.
+
+v0.9.8 changes
+--------------
+1. Stable Spinner selection guard prevents unchanged delayed startup callbacks from cascading and resetting CPU frequency.
+2. Responsive dp scaling for VM overlay, Profile Manager and Hardware Configurator.
+3. Whole Profile Manager scrolls on short displays; compact action rows stack vertically.
+4. Hardware Configurator bottom buttons stack vertically on compact displays.
+5. Touch/input settings and VM display dialog are scrollable.
+6. VM toolbar is vertically scrollable with a persistent scrollbar.
+7. New VIEW dialog: Stretch / 4:3 / Auto Fit / Integer / Integer 4:3 and image size 50-300%.
+8. Android renderer scale mode is passed to native SDL renderer; <100% centers a smaller image, >100% zooms/pans.
+9. Physical mouse requests pointer capture on hover/move/click over the VM, prefers relative axes, and has vendor fallbacks.
+10. Physical mouse logging covers Android events/capture/deltas plus native move/button/wheel events and mouse_ready state.
+
+Audit round 1 - PASS
+--------------------
+- Java parser: no parser/syntax diagnostics in modified Java files.
+- Expected unresolved Android SDK symbols only (SDK unavailable in audit container).
+- Java/native control ID 16 parity confirmed.
+- JNI hardware mouse declarations/exports confirmed.
+- v0.9.8/versionCode 43 and APK output names consistent.
+
+Audit round 2 - PASS
+--------------------
+- Same-value critical Spinner callback is ignored; real changed selection remains accepted.
+- Display modes 0..4 match 86Box FULLSCR scale enum order.
+- Zoom bounds 50..300 are consistent Java -> bridge -> SDL renderer.
+- Scroll/adaptive UI paths confirmed.
+- Mouse path Android -> JNI -> SDL/core and diagnostic traces confirmed.
+
+Audit round 3 - PASS
+--------------------
+- Case-insensitive filename collisions: none.
+- Zero-byte source/config files: none.
+- Diff against v0.9.7 limited to intended source/build/version/documentation files.
+- Final ZIP integrity tested successfully.
+
+Environment limitation
+----------------------
+A complete Android APK/NDK build was not executed in this audit container because the Android SDK/NDK and downloaded SDL/vcpkg build dependencies from the user's Windows build host are not installed here. The user's BUILD_APK.bat remains the authoritative end-to-end build test.

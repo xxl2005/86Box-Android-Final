@@ -1,0 +1,78 @@
+86Box Android v0.5.2 - AUDIT/FIX VALIDATION
+==========================================
+
+Base
+----
+86Box-Android v0.5.1 Diagnostics
+
+Scope
+-----
+Profile/Desktop import, CUE/BIN media import, diagnostics lifecycle,
+performance profiler, IDE/SCSI async workers, native crash marker/handler chaining,
+CUE/TOC/MDS parser hardening, Android packaging/build metadata.
+
+Executed checks
+---------------
+PASS  Pure-Java ProfilePortability compile + deterministic test:
+      - ../ sibling-profile path is NOT rewritten into another Android VM.
+      - an actually copied file can still be recovered by unique basename matching.
+      - Latin-1 CUE keeps its non-ASCII byte and gets portable path separators.
+
+PASS  Java source parser smoke via javac: 0 syntax-pattern errors.
+      Android framework symbols cannot be resolved here because no Android SDK is installed;
+      those expected missing-package errors are not counted as source syntax errors.
+
+PASS  JNI name parity: 10 Java native methods / 10 C JNI implementations,
+      no missing and no extra JNI entry points.
+
+PASS  Android Manifest + resource XML parse.
+PASS  BUILD_APK.bat label/branch validation: no missing jump/call labels.
+PASS  Gradle metadata: versionCode 9 / versionName 0.5.2.
+PASS  Universal APK metadata still contains arm64-v8a + x86_64 and universalApk=true.
+PASS  Native crash marker restores the pre-existing Android/debuggerd signal action before re-raising.
+PASS  Generated analyzer artifact hdc_ide.plist removed from the distributable source tree.
+
+PASS  GCC syntax-only with Stage features enabled:
+      - src/perf_profile.c
+      - src/scsi/scsi_disk.c
+      - src/disk/hdc_ide.c
+      - src/unix/android_bridge.c (JNI/SDL test headers)
+      - src/cdrom/cdrom_image.c (sndfile test header)
+
+PASS  GCC syntax-only for IDE/SCSI with Stage async feature macros disabled.
+      Synchronous fallback source path remains buildable.
+
+PASS  Clang Static Analyzer:
+      perf_profile.c       0 warnings
+      scsi_disk.c          0 warnings
+      hdc_ide.c            0 warnings
+      android_bridge.c     0 warnings (including previous-handler restore + re-raise)
+
+INFO  cdrom_image.c: 2 analyzer warnings remain.
+      The untouched v0.5.1 baseline reports 3 warnings in the same analysis setup.
+      v0.5.2 removed the prior possible MDS NULL dereference. The two remaining
+      findings are a legacy dead-store warning and an ownership/leak warning on an
+      MDS error path that is also present in v0.5.1; they were not introduced here.
+
+PASS  Deterministic profiler harness:
+      1.00 s wall time -> CPU/core 25.0 %, storage 10.0 %.
+
+Patch/package verification
+--------------------------
+PASS  git-style v0.5.1 -> v0.5.2 patch contains only relative project paths.
+PASS  patch --dry-run -p1 against the untouched v0.5.1 package.
+PASS  real patch application reproduces the v0.5.2 source tree byte-for-byte.
+PASS  final source ZIP archive integrity test: no compressed-data errors.
+
+Dependency/build-script sanity
+------------------------------
+PASS  Pinned SDL tag release-3.4.16 exists in the official SDL repository.
+PASS  Android Gradle Plugin 8.13.2 is compatible with Gradle 8.13 / JDK 17.
+PASS  vcpkg provides arm64-android and x64-android triplets targeting Android API 28.
+
+Runtime/full APK limitation
+---------------------------
+A complete Gradle + Android NDK APK compile still cannot be executed in this
+container because no Android SDK/NDK is installed. Therefore this report does NOT
+claim a device-runtime pass. The first Windows/Android build should still be tested
+on real ARM64 hardware, especially Dynarec/JIT, Vulkan, physical input and lifecycle.

@@ -1,0 +1,57 @@
+86Box Android v0.8.0 - UNIVERSAL 64-BIT APK
+===========================================
+
+Standard-Ausgabe:
+  86Box-Android-universal64-v0.8.0-debug.apk
+
+Enthaltene Android ABIs:
+  - arm64-v8a
+  - x86_64
+
+Zusaetzliche Gradle-Split-APKs:
+  - 86Box-Android-arm64-v0.8.0-debug.apk
+  - 86Box-Android-x86_64-v0.8.0-debug.apk
+
+Weiterhin aus v0.3.0:
+  - SDL3 Vulkan bevorzugt, Fallback: GPU -> GLES2 -> Software
+  - aktiven Renderer in den Einstellungen anzeigen
+  - Pinch-Zoom + Zwei-Finger-Pan
+  - deutsche QWERTZ/UTF-8 Android-IME-Keymap
+  - CUE/BIN Multi-Datei-SAF-Import mit CUE-Rewrite/Validierung
+  - echtes libslirp User-Mode-NAT fuer ARM64 und x86_64
+
+Weiter enthalten:
+  - Touch-Toolbar, Touch-Maus, L/R-Klick, Maus-Joystick
+  - Pause/Resume + Home Auto-Pause
+  - FDD/CD/HDD Medienimport
+  - Multi-Core Stage 1
+  - ARM64/x86_64 New Dynarec
+
+BUILD:
+  android\\BUILD_APK.bat
+  Menuepunkt [3] DEBUG UNIVERSAL APK bauen
+
+Neu in v0.5.1:
+  - VM-/Hardwareprofil-Manager als Android-Startoberflaeche
+  - eigenes 86box.cfg + NVR/CMOS + Medien pro Profil
+  - Desktop-86Box-VM-Ordner direkt ueber Android SAF importieren
+  - Windows/Linux-Pfade auf Android-kompatible Profilpfade portieren
+  - Original-CFG + IMPORT_REPORT fuer nicht aufloesbare externe Medien
+  - Profil duplizieren, umbenennen, loeschen, ZIP importieren/exportieren
+  - automatische Migration einer vorhandenen v0.4-Einzel-VM
+  - Multi-Core Stage 2 und PERF-Profiler bleiben voll enthalten
+
+Neu in v0.5.1:
+  - persistente Android- und 86Box-Nativelogs pro VM
+  - LOG-Viewer und Diagnose-ZIP-Export
+  - Java-Crash-Stacktrace + nativer Crash-Signalmarker
+
+Neu in v0.5.2:
+  - Audit-/Stabilitaetsfixes fuer Profile, Medienimport, Threads und Crash-Diagnose
+
+Neu in v0.8.0:
+- Finaler Release-Check vor dem ersten echten APK-Build.
+- MDS/MDF-Fehlerpfade schliessen Dateien und Track-Backings sauber.
+- CD-ROM-Parser besteht den verwendeten Clang Static Analyzer ohne Warnung.
+- Profilnamen mit fuehrendem Punkt erzeugen keine unsichtbaren Profile mehr.
+- Exportziel-Auswahl ueberlebt Activity-Neuerstellung/Rotation.

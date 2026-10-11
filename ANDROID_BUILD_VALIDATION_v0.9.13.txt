@@ -1,0 +1,22 @@
+86Box Android v0.9.13 validation
+
+Version:
+- versionName: 0.9.13
+- versionCode: 48
+
+Targeted changes:
+- Native Android touchpad adds held-left-button drag after ~350 ms stationary hold + movement.
+- Immediate swipe remains pointer-only for the whole gesture.
+- Drag release is guaranteed on finger-up, second finger and cancel.
+- Existing tap/double-tap/2-second-right-click/two-finger-right-click behavior retained.
+- HardwareConfig after-SAVE diagnostics now trace the saved IniConfig object.
+
+Runtime evidence from v0.9.12 user log:
+- Physical Dell mouse captured on SDL SurfaceView with relative MotionEvents and HW_MOUSE_MOVE mouse_ready=1.
+- CD picker cancelled and successful result both returned to the same VM session with foreground keep-alive.
+- No ANR/FATAL/Java exception/native crash observed in the inspected sessions.
+
+Static audit:
+- Touch state transitions reviewed for tap, swipe, held drag, right-click hold, multitouch and cancel.
+- Version/APK output strings checked for v0.9.13.
+- ZIP integrity checked after packaging.

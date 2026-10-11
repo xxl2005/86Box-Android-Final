@@ -1,0 +1,54 @@
+86Box Android v0.5.4 - SECOND RELEASE CHECK VALIDATION
+=======================================================
+
+Base
+----
+86Box-Android v0.5.3 Release Candidate
+
+New deterministic checks
+------------------------
+PASS  ProfilePortability pure-Java harness:
+      - Windows-1252 86box.cfg imports successfully and is normalized to UTF-8.
+      - UTF-8 BOM removed correctly.
+      - UTF-16LE BOM decoded correctly.
+      - ANSI/Windows-1252 CUE normalized to UTF-8 and portable separators.
+
+PASS  RuntimeAssets pure-Java/stub harness:
+      - first packaged asset extraction succeeds.
+      - existing/user-modified ROM is not overwritten.
+      - later APK revision adds a new asset without overwriting existing ROM.
+      - completion-marker path executes successfully.
+
+PASS  Java parser smoke: 0 syntax-pattern errors.
+      Expected unresolved android.* / SDL symbols remain because Android SDK is not installed.
+
+PASS  Hardware mouse-release hotkey structure:
+      Ctrl+Alt+G consumes G Make and matching G Break; state reset on hardware-input release.
+
+PASS  JNI parity: 10 Java native declarations / 10 C JNI implementations.
+PASS  Android manifest/resources XML parse.
+PASS  BUILD_APK.bat label/branch validation: no missing labels.
+PASS  BUILD_APK.bat now enforces javac/JDK >= 17 and checks API 35 + Build Tools 35.0.0 + pinned NDK.
+PASS  Gradle metadata: versionCode 11 / versionName 0.5.4.
+PASS  Universal metadata: arm64-v8a + x86_64, universalApk=true.
+PASS  Runtime/profile staging uses failure cleanup and launch-race guard.
+
+Native-code continuity
+----------------------
+PASS  src/ tree is byte-identical to v0.5.3.
+The v0.5.3 final check already executed GCC syntax-only and Clang Static Analyzer with 0 warnings on:
+- perf_profile.c
+- scsi_disk.c (async/on/off)
+- hdc_ide.c (async/on/off)
+- android_bridge.c
+- cdrom_image.c
+No native C/C++ source changed in v0.5.4.
+
+Dependency sanity
+-----------------
+SDL_TAG remains release-3.4.16; official SDL releases list 3.4.16 as the current stable release checked during this audit.
+Android Gradle configuration remains AGP 8.13.2 / Gradle 8.13 / Java 17+ compatible.
+
+Limit
+-----
+No complete Gradle + Android NDK APK build or real-device runtime pass was executed because this container has no Android SDK/NDK.

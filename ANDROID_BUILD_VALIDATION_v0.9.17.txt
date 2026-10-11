@@ -1,0 +1,23 @@
+86Box Android v0.9.17 validation
+================================
+Round 1 - manual CPU core selection / Java+JNI
+PASS: BOOST contains MANUAL CORES multi-choice UI for up to 64 host CPUs.
+PASS: selected mask persists in SharedPreferences; empty selection is rejected.
+PASS: Java lexical/parser structure clean; 64-bit mask smoke test passes including bit 63.
+PASS: native mask intersects the user's selection with Android's actually allowed CPU mask.
+PASS: invalid/fully unavailable manual mask falls back to automatic core selection.
+
+Round 2 - runtime reapply / regressions
+PASS: performance generation counter reapplies affinity while mode remains unchanged.
+PASS: AUTO CORES disables manual affinity; Balanced restores original Android affinity.
+PASS: Maximum nice=-10 retained.
+PASS: touch drag guidance/path retained.
+PASS: physical SDL-surface pointer capture retained.
+PASS: CD picker keepalive and non-blocking lifecycle retained.
+PASS: VmKeepAliveService unchanged from v0.9.16.
+PASS: versionName 0.9.17 / versionCode 52.
+
+Round 3 - packaging/integrity
+PASS: 2453 files present; no zero-byte source files; no case-insensitive path collisions.
+PASS: ZIP integrity test reports no errors.
+PASS: final package root is 86Box-Android-v0.9.17.

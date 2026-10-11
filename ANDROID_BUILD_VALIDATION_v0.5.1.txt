@@ -1,0 +1,36 @@
+86Box Android v0.5.1 - DIAGNOSTICS VALIDATION
+================================================
+
+Scope
+-----
+- v0.5.0 hardware/profile manager retained
+- persistent per-profile Android/UI log
+- native 86Box --logfile per session
+- Java uncaught-exception crash file
+- native crash signal marker for SIGSEGV/SIGABRT/SIGBUS/SIGILL/SIGFPE
+- in-app LOG viewer
+- diagnostics ZIP export from emulator and profile manager
+- automatic log retention
+
+Validation performed in this environment
+----------------------------------------
+PASS  AndroidManifest.xml / strings.xml / styles.xml parse as valid XML.
+PASS  Gradle metadata: versionCode 8 / versionName 0.5.1.
+PASS  Universal APK ABI list still contains arm64-v8a + x86_64.
+PASS  BUILD_APK.bat output name is 86Box-Android-universal64-v0.5.1-debug.apk.
+PASS  ProfilePortability.java compiles with javac 21.
+PASS  DiagnosticLogger.java compiles with javac 21 against minimal Android API stubs.
+PASS  Box86Activity/ProfileManagerActivity Java parse smoke found no Java syntax diagnostics; unresolved Android/SDL classes are expected without android.jar/SDL Java sources.
+PASS  DiagnosticLogger functional test:
+      - creates per-profile android-*.log + native-*.log paths
+      - live tail contains Android and native log text
+      - diagnostics ZIP was produced and opened successfully
+      - ZIP contained diagnostics/system.txt, profile/86box.cfg and log files
+      - no VM media image was exported by the diagnostics helper
+PASS  android_bridge.c compiles with GCC gnu11 using JNI/SDL stubs.
+PASS  Clang static analyzer shows the same pre-existing SDL media-event ownership warning as v0.5.0; no new diagnostics from the crash-marker code.
+PASS  Native crash-marker handler restores normal signal termination via SA_RESETHAND and writes only async-signal-safe marker output before handing control back to Android.
+
+Limit
+-----
+A complete Gradle/NDK APK compile cannot be executed in this ChatGPT container because an Android SDK/NDK/android.jar is not installed. The real APK build is therefore still performed on the Windows build host with android\BUILD_APK.bat.

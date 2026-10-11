@@ -1,0 +1,21 @@
+86Box Android v0.9.36 – Multi-Touch Audit und Cancel-Fix
+
+Durch Quellcode-Audit gefunden:
+* Bei Fenster-Fokusverlust (z. B. Dialog/App-Wechsel) wurde der VM-Touchstream
+  teilweise ohne ACTION_CANCEL verworfen: moegliche haengende Maus/Touchzustände.
+* Beim neuen DOWN nach verlorenen Pointer-UP/CANCEL fehlte die Abmeldung am SDL-Touch-Ziel.
+* Beim dynamischen Wechsel in den Tastatur-/Overlay-Modus konnten alte POINTER_UP-
+  Ereignisse als verwaiste Eingaben an das normale Android-View weiterlaufen.
+
+Behoben:
+* VM-Touchstream bekommt ACTION_CANCEL vor dem Reset, auch beim Fokusverlust.
+* Bei Umschalten von Key-Settings / virtueller Tastatur wird der alte Stream
+  sauber beendet; uebrige Events eines abgebrochenen Gestenstreams werden ignoriert.
+* Aktive Overlay-Tasten werden bei Fokusverlust freigegeben; HOLD-Latches aus
+  anderen Fenstern bleiben nicht unabsichtlich aktiv.
+* Bestehende Multi-Touch-Key-ID-Zuordnung, individuelle Groessen und
+  Maus-/Tastatur-Hardwarewege bleiben unberuehrt.
+
+Bitte auf dem Galaxy Tab testen: LEFT halten + VM-Touch, Fokuswechsel, Rueckkehr,
+mehrere Keys gleichzeitig, HOLD, virtuelle Tastatur und physische Maus.
+Ein echter Android/NDK APK Build wurde nicht hier ausgefuehrt.

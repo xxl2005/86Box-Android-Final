@@ -1,0 +1,69 @@
+86Box Android v0.3.1 - BUILD / HARDWARE INPUT VALIDATION
+Date: 2026-09-24
+Base: 86Box Android v0.3.0
+
+RESULT SUMMARY
+==============
+PASS  AndroidManifest.xml parses
+PASS  res/values/strings.xml parses
+PASS  res/values/styles.xml parses
+PASS  Java parser smoke test: no Java grammar diagnostics detected
+      (Android SDK android.jar is absent, so unresolved Android symbols are expected)
+PASS  JNI native method parity: 9 Java declarations == 9 C JNI exports
+PASS  GCC strict C11 syntax check: src/unix/android_bridge.c
+PASS  Clang Static Analyzer: src/unix/android_bridge.c (0 diagnostics)
+PASS  Android SDL user-event handler extracted syntax check
+PASS  BUILD_APK.bat CALL/GOTO label scan: all labels resolve
+PASS  Gradle Universal64 ABI configuration: arm64-v8a + x86_64
+PASS  versionCode 5 / versionName 0.3.1
+
+HARDWARE INPUT VALIDATED STRUCTURALLY
+=====================================
+- physical USB/Bluetooth keyboard direct path
+- raw Android/Linux HID scanCode -> XT/AT scan-code mapping
+- Android KeyCode fallback if a device reports no useful raw scan code
+- left/right Shift, Ctrl, Alt/AltGr
+- F1-F12, arrows, Home/End, Insert/Delete, PageUp/PageDown
+- NumPad keys
+- Windows/Meta/Menu keys
+- ISO 102nd key (< > | on German keyboards), Linux scan code 86 -> XT 0x56
+- Android key-repeat suppression so guest typematic remains authoritative
+- physical mouse direct path
+- Android pointer capture / SOURCE_MOUSE_RELATIVE support
+- left/right/middle/X1/X2 mouse buttons
+- vertical mouse wheel
+- mouse speed scaling shared with existing 25-300 percent setting
+- click emulator area or MOUSE toolbar button to request capture
+- Ctrl+Alt+G releases pointer capture
+- hardware key/button release event on Home/App pause/resume to avoid stuck input
+- Touch input, virtual joystick and Android IME remain enabled in parallel
+
+NATIVE THREADING MODEL
+======================
+Java UI/input callbacks do not directly mutate the emulated keyboard/mouse state.
+The JNI bridge pushes SDL user events; 86Box processes the hardware key/mouse actions
+on the emulator SDL event thread. Mouse state updates retain the existing mouse mutex.
+
+ANDROID POINTER CAPTURE API CHECK
+=================================
+The implementation uses View.setOnCapturedPointerListener + requestPointerCapture().
+For SOURCE_MOUSE_RELATIVE events, getX()/getY() are treated as relative deltas.
+The project minSdk remains 28; pointer capture was introduced in Android API 26.
+
+UNCHANGED FROM v0.3.0
+=====================
+- Universal64 APK: arm64-v8a + x86_64
+- SDL3 Vulkan -> GPU -> GLES2 -> software preference
+- Zoom/Pan
+- German/UTF-8 on-screen IME
+- CUE/BIN multi-file import
+- libslirp User-Mode NAT
+- Touch toolbar / virtual mouse joystick
+- OpenAL, New Dynarec, Multi-Core Stage 1
+
+LIMITATION / NOT CLAIMED
+========================
+This execution environment has no Android SDK/NDK installed. A real Gradle + NDK APK
+compile and physical USB/Bluetooth device runtime test therefore could not be performed here.
+Run android\\BUILD_APK.bat on the Windows build machine and keep the complete console log
+for the first real v0.3.1 build/device test.

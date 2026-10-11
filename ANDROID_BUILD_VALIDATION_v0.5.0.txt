@@ -1,0 +1,36 @@
+86Box Android v0.5.0 - PROFILE MANAGER VALIDATION
+=================================================
+
+Scope
+-----
+- v0.4.0 Multi-Core Stage 2 baseline retained
+- per-VM hardware/profile directories
+- desktop 86Box folder import through Android SAF
+- profile ZIP import/export
+- Windows/Linux path normalization
+- v0.4 legacy VM migration
+- per-profile media directories
+- Android profile hardware summary
+
+Validation performed in this environment
+----------------------------------------
+PASS  AndroidManifest.xml / strings.xml / styles.xml parse as valid XML.
+PASS  ProfileManagerActivity is the LAUNCHER activity; Box86Activity is internal/non-exported.
+PASS  Gradle metadata: versionCode 7 / versionName 0.5.0.
+PASS  Universal APK ABI list still contains arm64-v8a + x86_64.
+PASS  BUILD_APK.bat output name is 86Box-Android-universal64-v0.5.0-debug.apk.
+PASS  Java source parse shows no Java syntax diagnostics; unresolved Android classes are expected because android.jar is unavailable here.
+PASS  Pure-Java ProfilePortability.java compiles with javac.
+PASS  Synthetic desktop profile portability test:
+      - C:\\...\\disks\\win98.vhd -> disks/win98.vhd
+      - disks\\win98.vhd -> disks/win98.vhd
+      - D:\\ISO\\setup.iso -> cd/setup.iso
+      - missing external E:\\Outside\\missing.iso preserved and reported
+      - non-path value scsi_location = 0:02 unchanged
+      - CUE backslashes normalized
+      Result: rewritten=3, unresolved=1.
+PASS  v0.4.0 -> v0.5.0 patch dry-run applies without conflicts (11 files).
+
+Limit
+-----
+A complete Gradle/NDK APK compile cannot be executed in this ChatGPT container because an Android SDK/NDK/android.jar is not installed. The real APK build is therefore still performed on the Windows build host with android\\BUILD_APK.bat.

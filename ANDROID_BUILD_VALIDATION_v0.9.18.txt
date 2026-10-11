@@ -1,0 +1,20 @@
+86Box Android v0.9.18 validation
+================================
+Round 1 - overlay defaults
+PASS: speed overlay default size = 60%.
+PASS: speed overlay default background opacity = 30%.
+PASS: size range remains 60-160%; opacity range remains 20-100%.
+PASS: stored user preferences continue to override defaults.
+
+Round 2 - regressions
+PASS: HostPerformanceTuner.java unchanged from v0.9.17.
+PASS: VmKeepAliveService.java unchanged from v0.9.17.
+PASS: native android_bridge.c affinity/manual-core implementation unchanged from v0.9.17.
+PASS: Box86Activity changes limited to four intended overlay default literals.
+PASS: versionName 0.9.18 / versionCode 53.
+
+Round 3 - packaging/integrity
+PASS: no zero-byte source files.
+PASS: no case-insensitive path collisions.
+PASS: ZIP integrity test reports no errors.
+PASS: final package root is 86Box-Android-v0.9.18.

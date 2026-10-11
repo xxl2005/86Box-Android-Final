@@ -1,0 +1,14 @@
+86Box Android v0.5.7 - Build-script validation
+
+[PASS] Universal ABIs remain arm64-v8a + x86_64
+[PASS] vcpkg installs remain --classic
+[PASS] NDK build path is now a physical no-space copy, not 8.3/junction
+[PASS] Local NDK target derives from project drive: \86BoxAndroidToolchains\ndk-28.2.13676358
+[PASS] Robocopy success threshold handles return codes < 8
+[PASS] Completion marker prevents repeated 2.1 GB copies
+[PASS] ANDROID_NDK_HOME / ANDROID_NDK_ROOT use the physical copy
+[PASS] CMake ANDROID_NDK and chainload toolchain use the same copy
+[PASS] vcpkg detect_compiler and failed gettext-libintl buildtree are refreshed
+[PASS] Existing downloads / installed packages are not globally cleaned
+[PASS] Gradle versionName 0.5.7 / versionCode 14
+[PASS] BUILD_APK.bat labels/goto targets validated

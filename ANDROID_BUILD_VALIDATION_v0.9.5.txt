@@ -1,0 +1,31 @@
+86Box Android v0.9.5 - Desktop CPU Preserve Fix Validation
+===========================================================
+
+Scope:
+- Imported desktop profile CPU family preservation
+- Imported desktop profile cpu_speed/cpu_multi preservation
+- Compatibility-filter fallback that previously displayed 66 MHz instead of 200 MHz
+- Diagnostic logging of raw profile CPU -> selected Hardware Configurator CPU
+- Version/build-output consistency
+
+Audit round 1: PASS
+- HardwareConfigActivity method/signature consistency checked.
+- Java delimiter/brace structure checked.
+- versionCode = 40, versionName = 0.9.5.
+- BUILD_APK.bat output names changed to v0.9.5.
+
+Audit round 2: PASS
+- Synthetic case: configured CPU family hidden by compatibility filter -> configured family restored from full compiled 86Box catalogue.
+- Synthetic case: 200000000 Hz / multiplier 3 CPU row hidden by compatibility filter -> exact row restored and selected.
+- Synthetic case: older profile without cpu_multi -> exact 200000000 Hz row preserved.
+- Only the configured hidden CPU/family is added; the rest of incompatible catalogue remains filtered.
+- Initial CPU selection is logged as raw profile values -> selected values.
+
+Audit round 3: PASS
+- Final archive integrity checked with unzip -t.
+- No zero-byte Java/C/C++ source files.
+- No duplicate case-insensitive archive paths.
+- Changes relative to v0.9.4 limited to HardwareConfigActivity, Gradle/build version strings, and v0.9.5 validation/fix notes.
+
+Note:
+A full Android APK build still requires the user's Windows Android SDK/NDK/vcpkg environment.

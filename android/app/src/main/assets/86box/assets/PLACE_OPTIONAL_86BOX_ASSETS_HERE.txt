@@ -1,0 +1,2 @@
+Optionale 86Box-Assets koennen hier vor dem Build abgelegt werden.
+Dieser Stage-1-Port enthaelt standardmaessig keine externen Asset-Pakete.

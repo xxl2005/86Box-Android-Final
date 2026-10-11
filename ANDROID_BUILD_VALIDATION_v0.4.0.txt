@@ -1,0 +1,58 @@
+86Box Android v0.4.0 - STAGE 2 VALIDATION
+==========================================
+
+Scope
+-----
+Base: 86Box-Android v0.3.1
+New: asynchronous SCSI fixed-disk reads + internal performance profiler + Android PERF UI
+
+Checks performed in the build environment
+-----------------------------------------
+PASS  GCC syntax-only with USE_ASYNC_SCSI_READS + USE_PERF_PROFILE:
+      perf_profile.c, scsi_disk.c, scsi_device.c, io.c, hdd_image.c,
+      x54x, aic7xxx, ncr53c8xx, pcscsi, aha1740, buslogic, ql1xxx, spock,
+      86box.c, video.c, sound.c.
+
+PASS  GCC syntax-only with both Stage 2 feature macros disabled.
+      This verifies the source still supports the old synchronous/non-profile build.
+
+PASS  Clang Static Analyzer over Stage 2 SCSI/profiler files.
+      No new Stage-2 memory/control-flow defect was reported.
+      Analyzer output still contains pre-existing warnings in unrelated legacy paths
+      (for example VHD option initialization/dead stores and a few controller dead stores).
+
+PASS  Android JNI bridge GCC syntax-only with JNI + SDL test headers.
+PASS  Android JNI bridge Clang analysis; one expected ownership warning remains because
+      the analyzer cannot see that SDL's queued media event frees the transferred path later.
+
+PASS  Java native methods vs C JNI functions: 10 / 10 exact names, no missing or extra methods.
+PASS  Java delimiter/parser smoke check: no Java syntax error detected.
+      javac cannot resolve Android framework imports here because no Android SDK is installed.
+
+PASS  Profiler deterministic harness:
+      1.00 s wall time -> CPU/core 25.0 %, storage 10.0 % as expected.
+
+PASS  CMake parses the new ASYNC_SCSI_READS and PERF_PROFILE options and proceeds until
+      the environment's missing Freetype development package. This is an external dependency,
+      not a Stage-2 CMake syntax error.
+
+PASS  Android Gradle metadata: versionCode 6 / versionName 0.4.0.
+PASS  Android BUILD_APK.bat enables ASYNC_SCSI_READS=ON and PERF_PROFILE=ON.
+PASS  Universal APK target remains arm64-v8a + x86_64.
+
+Runtime validation still required
+---------------------------------
+A real Android SDK/NDK is not installed in this execution environment. Therefore a complete
+Gradle/NDK APK compile and a physical-device runtime benchmark could not be performed here.
+The first real APK/device test should compare SCSI-heavy workloads with ASYNC_SCSI_READS ON/OFF
+and use PERF to measure storage time versus residual SCSI wait.
+
+Patch validation
+----------------
+PASS  git apply --check against the untouched v0.3.1 source tree.
+INFO  34 files changed, 706 insertions, 43 deletions (includes documentation/version updates).
+
+CMake environment note
+----------------------
+The host CMake configure parsed the Stage-2 options successfully and stopped at the missing
+Freetype development library. No full desktop link/build is claimed from this environment.

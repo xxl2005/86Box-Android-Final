@@ -1,0 +1,59 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'net.box86.android'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'net.box86.android.multicoreexperiment'
+        minSdk 28
+        targetSdk 35
+        versionCode 83
+        versionName '0.11.1-original-cpu-cycles-audited'
+    }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'arm64-v8a', 'x86_64'
+            universalApk true
+        }
+    }
+
+    // 86BOX_ANDROID_BUILDCONFIG_FIX
+    // DiagnosticLogger uses BuildConfig.VERSION_NAME, VERSION_CODE and BUILD_TYPE.
+    // AGP 8.x no longer guarantees BuildConfig generation unless enabled.
+    buildFeatures {
+        buildConfig true
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+        }
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs']
+            assets.srcDirs = ['src/main/assets']
+        }
+    }
+
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+}

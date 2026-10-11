@@ -1,0 +1,23 @@
+86Box Android v0.9.33 - validation
+===================================
+Version: 0.9.33 / versionCode 68
+
+Audit round 1:
+- Version/settings consistency checked.
+- C/Java brace balance checked.
+- Patched regions inspected.
+
+Audit round 2:
+- Diff against v0.9.32 checked.
+- Found and fixed accidental BUILD_APK.bat LF conversion.
+- Thread Assist startup reservation, Adaptive Smooth v3, HID keyboard guard and native-log rebind assertions passed.
+- Existing Game-Key overlay and physical mouse motion paths kept unchanged outside the intended device-classifier guard.
+
+Audit round 3:
+- BUILD_APK.bat restored to CRLF and only version fallback values changed.
+- Game-Key overlay, generic mouse-motion and touch-dispatch method regions verified byte-for-byte unchanged vs v0.9.32.
+- No stale v0.9.32 canonical version remains in live Gradle/build script.
+- Archive integrity check performed after packaging.
+
+Note:
+A full Android NDK/Gradle APK compilation was not run in this Linux analysis container because the project's Windows Android SDK/NDK/vcpkg build environment is not present here. BUILD_APK.bat remains the canonical Windows build path.

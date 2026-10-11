@@ -1,0 +1,30 @@
+86Box Android v0.9.35 – Game-Key-Overlay Multi-Touch / Mehrfinger-Fix
+
+Was neu ist:
+* Mehrere Game-Key-Overlay-Tasten gleichzeitig gedrückt halten (z. B. LINKs + HOCH + SPACE).
+* Game-Key-Overlay mit PC-Touch/Mausbereich bzw. Joystick gleichzeitig benutzen.
+* Android-Pointer-IDs werden separat je Taste geführt; keine vorzeitigen Key-Up-Events,
+  selbst wenn zwei Finger dieselbe Taste halten.
+* Game-Key-Touches werden vom restlichen Android-Touch-Stream abgetrennt, mit
+  rekonstruiertem DOWN/POINTER_DOWN/MOVE/POINTER_UP/UP für die verbleibenden Finger.
+* Bestehender HOLD-Modus, Tastenpositionen und individuelle Größen bleiben erhalten.
+* Tastatureingabe/Android-ScrollView lassen das Splitting von Touch-Events ausdrücklich zu.
+* Hardware-Maus und Stylus bleiben beim bisherigen Pfad.
+* Bei Unterbrechung/Pause werden gehaltene Tasten freigegeben.
+
+Regressionstest (auf Host-JDK):
+  javac -d test-classes app/src/main/java/net/box86/android/TouchStreamAction.java app/src/main/java/net/box86/android/KeyTouchTracker.java tests/java/net/box86/android/TouchStreamActionTest.java tests/java/net/box86/android/KeyTouchTrackerTest.java
+  java -cp test-classes net.box86.android.TouchStreamActionTest
+  java -cp test-classes net.box86.android.KeyTouchTrackerTest
+  (25 bestandene Java-Logiktests insgesamt)
+
+Wichtiger Praxistest auf Galaxy Tab S11 Ultra:
+1. Spiel starten, Overlay-Tasten UP, LEFT und SPACE aktivieren.
+2. LEFT gedrückt halten und mit zweitem Finger SPACE drücken; beide müssen aktiv bleiben.
+3. LEFT halten und mit zweitem Finger im PC-Bildschirm den Mauszeiger bewegen.
+4. Nacheinander Finger heben: jede Taste wird erst beim eigenen Finger-Loslassen freigegeben.
+5. HOLD aktivieren, testen, App in Hintergrund schicken und wieder öffnen.
+6. Virtuelle Tastatur und physische Maus separat testen.
+
+Status: Quellcode-Patch und JDK-Logiktests vorhanden; ein Android-Gerätetest
+und vollständiger APK-Build wurden in dieser Umgebung nicht durchgeführt.

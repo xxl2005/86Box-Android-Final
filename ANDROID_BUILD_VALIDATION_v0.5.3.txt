@@ -1,0 +1,71 @@
+86Box Android v0.5.3 - FINAL RELEASE-CANDIDATE VALIDATION
+=========================================================
+
+Base
+----
+86Box-Android v0.5.2 Audit Fix
+
+Additional fixes in this final pass
+-----------------------------------
+PASS  MDS short-header error path now closes the open FILE*.
+PASS  MDS multi-footer backing-file open is deferred until all footer records parse,
+      preventing an orphaned track_file_t on a later malformed footer.
+PASS  Removed the remaining cdrom_image.c analyzer dead store.
+PASS  Profile directory IDs cannot start with '.', preventing invisible profiles.
+PASS  Pending profile/diagnostics exports survive Activity recreation and are
+      canonical-path validated under the profiles root; cancelled pickers clear state.
+
+Executed checks
+---------------
+PASS  Pure-Java ProfilePortability deterministic test:
+      - ../ sibling-profile path is NOT rewritten into another Android VM.
+      - an actually copied file can still be recovered by unique basename matching.
+      - Latin-1 CUE keeps its non-ASCII byte and gets portable path separators.
+
+PASS  Java source parser smoke via javac: 0 syntax-pattern errors.
+      Expected unresolved android.* symbols remain because no Android SDK is installed.
+
+PASS  JNI name parity: 10 Java native methods / 10 C JNI implementations.
+PASS  Android Manifest + resource XML parse.
+PASS  BUILD_APK.bat label/branch validation: all goto/call labels resolve.
+PASS  Gradle metadata: versionCode 10 / versionName 0.5.3.
+PASS  Universal APK metadata: arm64-v8a + x86_64 and universalApk=true.
+PASS  No generated hdc_ide.plist analyzer artifact in source package.
+
+PASS  GCC syntax-only:
+      - src/perf_profile.c with USE_PERF_PROFILE
+      - src/scsi/scsi_disk.c with and without USE_ASYNC_SCSI_READS
+      - src/disk/hdc_ide.c with and without USE_ASYNC_PIO_WRITES
+      - src/unix/android_bridge.c with Android/JNI/SDL test headers
+      - src/cdrom/cdrom_image.c
+
+PASS  Clang Static Analyzer (audited high-risk/modified paths):
+      perf_profile.c       0 warnings
+      scsi_disk.c          0 warnings
+      hdc_ide.c            0 warnings
+      android_bridge.c     0 warnings
+      cdrom_image.c        0 warnings
+
+PASS  Deterministic profiler harness:
+      1.00 s wall time -> CPU/core 25.0 %, storage 10.0 %.
+
+Release packaging checks
+------------------------
+The final package additionally verifies:
+- v0.5.2 -> v0.5.3 patch dry-run against untouched v0.5.2
+- real patch application reproduces v0.5.3
+- final ZIP integrity
+- SHA-256 hashes
+
+Runtime/full APK limitation
+---------------------------
+A complete Gradle + Android NDK APK compile cannot be executed in this container
+because no Android SDK/NDK is installed. This validation therefore does NOT claim
+a device-runtime pass. The first Windows build and real ARM64-device test remain
+necessary for Dynarec/JIT, Vulkan, physical input, audio, networking and lifecycle.
+
+Final patch reproduction result
+-------------------------------
+PASS  git-style patch contains relative project paths only.
+PASS  patch --dry-run -p1 against untouched v0.5.2.
+PASS  real patch application reproduces the v0.5.3 source tree exactly (diff -qr: no differences).

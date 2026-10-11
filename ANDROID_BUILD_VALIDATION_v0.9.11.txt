@@ -1,0 +1,26 @@
+86Box Android v0.9.11 validation
+================================
+Basis: v0.9.10 + user complete-app log from 2026-10-04.
+
+Observed v0.9.10 log facts
+- CD picker keepalive became active before DocumentsUI.
+- VM activity entered onPause for request 1002.
+- Old process log ended immediately after physical mouse release; no normal native shutdown was logged.
+- A later app session started under a new PID in ProfileManagerActivity.
+- Native VM log also ended abruptly (no normal shutdown tail).
+
+Fixes
+1. Android custom touchpad owns touch exclusively:
+   SDL_HINT_TOUCH_MOUSE_EVENTS=0 and SDL_HINT_MOUSE_TOUCH_EVENTS=0 before SDL_Init.
+2. Drag/tap state machine strengthened:
+   accumulated motion threshold 0.008 normalized units; click only on finger-up when no drag occurred.
+3. SDL3 Android pause made non-blocking with SDL_HINT_ANDROID_BLOCK_ON_PAUSE=0.
+4. Android lifecycle no longer calls blocking do_pause(1); it uses do_pause_android_lifecycle().
+5. ApplicationExitInfo history logged on next process start to identify any future system kill reason.
+6. Existing picker foreground keepalive retained.
+
+Audit 1: PASS - version/hints/diff/lifecycle wiring.
+Audit 2: PASS - gesture regression simulation + Java syntax smoke; only missing Android SDK symbols in this host environment.
+Audit 3: PASS - final archive integrity and intended-file diff only.
+
+Note: Full APK build still requires the project's Windows Android SDK/NDK build environment.

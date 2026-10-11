@@ -1,0 +1,90 @@
+86Box Android v0.3.0 - BUILD / PORT VALIDATION
+Date: 2026-09-24
+Base: 86Box 7.0 + audit fixes + Multi-Core Stage 1 + Android v0.2.0
+
+RESULT SUMMARY
+==============
+PASS  GCC strict C11 syntax check: src/unix/android_bridge.c
+PASS  Clang Static Analyzer: src/unix/android_bridge.c (0 diagnostics)
+PASS  Android preprocessor path: src/unix/sdl_main.c
+PASS  Android preprocessor path: src/unix/sdl_render.c
+PASS  AndroidManifest.xml parses
+PASS  res/values/strings.xml parses
+PASS  res/values/styles.xml parses
+PASS  Java lexical/syntax smoke test: no Java grammar diagnostics detected
+      (javac cannot resolve Android classes here because Android SDK android.jar is absent)
+PASS  JNI native method parity: Java declarations == C JNI exports
+      nativeControl
+      nativeGetRendererInfo
+      nativeLifecyclePause
+      nativeMountMedia
+PASS  Android control ID parity: 14 Java/C control IDs match
+PASS  BUILD_APK.bat control-flow scan: all CALL/GOTO labels resolve
+PASS  Gradle Universal64 ABI configuration: arm64-v8a + x86_64
+PASS  CUE/BIN importer: exactly-one-CUE guard present
+PASS  Vulkan renderer priority marker: vulkan,gpu,opengles2,software
+PASS  Zoom/Pan native state and renderer path present
+PASS  German guest keyboard / UTF-8 text-input path present
+PASS  libslirp build dependencies configured for arm64-android + x64-android
+PASS  libslirp pollfd capacity invariant: pfd_size is an entry count (16), not a byte count
+PASS  CMake Android configuration with ANDROID_REAL_SLIRP=OFF (fallback stub)
+PASS  CMake Android configuration with ANDROID_REAL_SLIRP=ON using a validation slirp.pc (4.9.1)
+
+CMAKE VALIDATION DETAILS
+========================
+Fallback mode:
+  Configuring done
+  Generating done
+
+Real libslirp mode:
+  Found slirp, version 4.9.1
+  Configuring done
+  Generating done
+
+FEATURES VALIDATED STRUCTURALLY
+===============================
+- Universal64 APK setup: arm64-v8a + x86_64
+- SDL3 renderer preference: Vulkan -> SDL GPU -> OpenGL ES 2 -> software
+- Active renderer query exposed to Android settings
+- Pinch zoom 100-300 percent
+- Two-finger pan with bounds clamping and reset at 100 percent
+- Android UTF-8 IME path into XT scan-code generation
+- US/QWERTY and German/QWERTZ guest keyboard maps
+- German umlauts/sz/Euro/section/degree/micro and common AltGr combinations
+- Android SAF multi-selection for CD media
+- CUE/BIN set copy + local CUE FILE-reference rewriting + missing-track validation
+- Multiple CUE sheets rejected for one disc set
+- Real libslirp/User-Mode NAT backend enabled by default on Android
+- libslirp pollfd capacity/allocation cleanup hardening
+- Existing v0.2 touch toolbar, virtual mouse joystick, L/R click, pause/home handling,
+  reset, FDD/CD/HDD import, OpenAL, New Dynarec and Multi-Core Stage 1 retained
+
+HOST TOOLCHAIN AVAILABLE IN THIS VALIDATION ENVIRONMENT
+=======================================================
+Java:   OpenJDK 21.0.11
+CMake:  3.31.6
+GCC:    14.2.0
+Clang:  17.0.0
+
+LIMITATION / NOT CLAIMED
+========================
+The execution environment used for this validation has no Android SDK/NDK installed:
+  ANDROID_HOME     = unset
+  ANDROID_SDK_ROOT = unset
+  sdkmanager       = unavailable
+  adb              = unavailable
+
+Therefore a real Gradle + Android NDK compile of the final APK and a device/runtime test
+could NOT be performed here. The supplied Windows BUILD_APK.bat is intended to install/use
+Android API 35, Build Tools 35.0.0 and NDK 28.2.13676358 (r28c) and then build both ABIs.
+
+A successful structural/static validation is not a substitute for the first real device build.
+If the Windows build reports an NDK/link/runtime error, retain the complete console log; it can
+be used for the next port-fix iteration.
+
+PATCH / PACKAGE PRECHECK
+========================
+PASS  v0.2.0 -> v0.3.0 patch generated from a clean v0.2.0 baseline
+PASS  git apply --check against fresh v0.2.0 tree
+PASS  applied patch tree byte/content comparison against final v0.3.0 source tree
+Changed/new files in v0.3.0 patch: 15

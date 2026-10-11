@@ -1,0 +1,28 @@
+86Box Android v0.9.6 - Complete App Log Validation
+===================================================
+
+Version:
+- versionCode = 41
+- versionName = 0.9.6
+- BUILD_APK.bat output names = v0.9.6
+
+Implemented diagnostics:
+- Process-wide Application logger
+- Activity lifecycle logging
+- Persistent Java crash logging
+- Complete app diagnostics ZIP export
+- CPU profile import/configurator trace
+- Profile and native logs included in complete export
+- No guest media or ROM binary payloads in diagnostics export
+
+Targeted v0.9.5 regression preserved:
+- Desktop CPU preserve logic remains unchanged.
+- v0.9.6 primarily adds observability around the still-reproducible 200 MHz -> 66 MHz UI issue.
+
+Audit result:
+- Round 1: manifest/version/application startup/static Java parse OK.
+- Round 2: diagnostics allow-list and full CPU trace coverage OK; Java parse OK.
+- Round 3: archive integrity/version/source checks OK.
+
+Note:
+- A full Android APK compile is intentionally not claimed in this validation environment because the user's Windows Android SDK/NDK toolchain is not mounted here. The source/build package is prepared for the normal BUILD_APK.bat workflow.

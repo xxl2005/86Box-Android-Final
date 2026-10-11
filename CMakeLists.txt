@@ -1,0 +1,328 @@
+#
+# 86Box    A hypervisor and IBM PC system emulator that specializes in
+#          running old operating systems and software designed for IBM
+#          PC systems and compatibles from 1981 through fairly recent
+#          system designs based on the PCI bus.
+#
+#          This file is part of the 86Box distribution.
+#
+#          CMake build script.
+#
+# Authors: David Hrdlička, <hrdlickadavid@outlook.com>
+#
+#          Copyright 2020-2021 David Hrdlička.
+#          Copyright 2021-2026 Jasmine Iwanek.
+#
+
+cmake_minimum_required(VERSION 3.16)
+
+cmake_policy(SET CMP0091 NEW)
+cmake_policy(SET CMP0079 NEW)
+if(POLICY CMP0219)
+    cmake_policy(SET CMP0219 NEW)
+endif()
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
+
+set(CMAKE_CONFIGURATION_TYPES "Debug;Release;UltraDebug;Optimized" CACHE STRING "")
+
+if(NOT DEFINED QT OR QT)
+    list(APPEND VCPKG_MANIFEST_FEATURES "qt-ui")
+endif()
+
+if(NOT DEFINED OPENAL OR OPENAL)
+    list(APPEND VCPKG_MANIFEST_FEATURES "openal")
+endif()
+
+if(MUNT_EXTERNAL)
+    list(APPEND VCPKG_MANIFEST_FEATURES "munt")
+endif()
+
+project(86Box
+    VERSION 7.0
+    DESCRIPTION "Emulator of x86-based systems"
+    HOMEPAGE_URL "https://86box.net"
+    LANGUAGES C CXX)
+
+if (NOT (CMAKE_SIZEOF_VOID_P STREQUAL "8"))
+    message(FATAL_ERROR "Only 64-bit builds are supported.")
+endif()
+
+if (CMAKE_C_BYTE_ORDER STREQUAL "BIG_ENDIAN")
+    message(FATAL_ERROR "Big-endian builds are not supported.")
+endif()
+
+include(CPack)
+include(CMakeDependentOption)
+include(FetchContent)
+
+# Basic build options
+if(VCPKG_TOOLCHAIN)
+    # For vcpkg builds we have to respect the linking method used by the
+    # specified triplet.
+    set(NO_STATIC_OPTION ON)
+    if(VCPKG_TARGET_TRIPLET MATCHES "-static$")
+        # `-static` triplet, use static linking
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+        set(STATIC_BUILD ON)
+    elseif(VCPKG_TARGET_TRIPLET MATCHES "-static-md$")
+        # `-static-md` triplet, use static linking with dynamic CRT
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+        set(STATIC_BUILD ON)
+    else()
+        # Regular triplet, use dynamic linking
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+        set(STATIC_BUILD OFF)
+    endif()
+
+    # `vcpkg.json` defaults to Qt6
+    set(USE_QT6 ON)
+endif()
+
+if(WIN32)
+    # Prefer static builds on Windows
+    set(PREFER_STATIC ON)
+
+    # Default value for the `WIN32` target property, which specifies whether
+    # to build the application for the Windows GUI or console subsystem
+    option(CMAKE_WIN32_EXECUTABLE "Build a Windows GUI executable" ON)
+else()
+    # Prefer dynamic builds everywhere else
+    set(PREFER_STATIC OFF)
+endif()
+
+if(APPLE)
+    option(CMAKE_MACOSX_BUNDLE "Build a macOS bundle (.app)" ON)
+endif()
+
+if(NOT NO_STATIC_OPTION)
+    if(PREFER_STATIC)
+        option(STATIC_BUILD "Static build" ON)
+    else()
+        option(STATIC_BUILD "Static build" OFF)
+    endif()
+endif()
+
+if(NOT (WIN32 OR APPLE OR CMAKE_SYSTEM_NAME STREQUAL "Linux"))
+    set(DISCORD OFF)
+endif()
+
+if(HAIKU)
+    set(OPENAL ON)
+endif()
+
+include(DetectTargetArch)
+include(CompilerFlags)
+
+# Optional features
+#
+#      Option       Description                                                  Def.
+#      ------       -----------                                                  ----
+option(RELEASE      "Release build"                                              OFF)
+option(DYNAREC      "Dynamic recompiler"                                         ON)
+option(OPENAL       "OpenAL"                                                     ON)
+option(RTMIDI       "RtMidi"                                                     ON)
+option(FLUIDSYNTH   "FluidSynth"                                                 ON)
+option(MUNT         "MUNT"                                                       ON)
+option(SOUNDCANVAS  "Sound Canvas (CLAP)"                                        ON)
+option(VNC          "VNC renderer"                                               OFF)
+option(ASYNC_PIO_WRITES "Overlap IDE PIO host writes with emulated disk timing"          ON)
+option(ASYNC_SCSI_READS "Overlap SCSI fixed-disk host reads with emulated transfer timing" ON)
+option(PERF_PROFILE "Build the low-overhead internal performance profiler"                 OFF)
+option(MINITRACE    "Enable Chrome tracing using the modified minitrace library" OFF)
+option(GDBSTUB      "Enable GDB stub server for debugging"                       OFF)
+option(DEV_BRANCH   "Development branch"                                         OFF)
+option(DISCORD      "Discord Rich Presence support"                              ON)
+option(DEBUGREGS486 "Enable debug register opeartion on 486+ CPUs"               OFF)
+option(LIBASAN      "Enable compilation with the addresss sanitizer"             OFF)
+option(QT           "Use the Qt-based user interface"                            ON)
+option(SDL2         "Use SDL2 instead of SDL3"                                   OFF)
+option(BUILD_TESTING "Build the unit test suite"                                  OFF)
+option(BUILD_BENCHMARKS "Build performance benchmarks"                            OFF)
+
+if(BUILD_TESTING)
+    enable_testing()
+    find_package(GTest CONFIG REQUIRED)
+endif()
+if(BUILD_BENCHMARKS)
+    find_package(benchmark CONFIG REQUIRED)
+endif()
+if(BUILD_TESTING OR BUILD_BENCHMARKS)
+    add_subdirectory(tests)
+endif()
+
+if((ARCH STREQUAL "arm64"))
+    set(NEW_DYNAREC ON)
+else()
+    option(NEW_DYNAREC "Use the PCem v15 (\"new\") dynamic recompiler" OFF)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
+    option(AUDIO4 "Use audio(4) as sound backend" ON)
+else()
+    set(AUDIO4 OFF)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+    option(SNDIO "Use sndio as sound backend" ON)
+else()
+    set(SNDIO OFF)
+endif()
+
+if(WIN32)
+    option(CPPTHREADS "C++11 threads" OFF)
+else()
+    option(CPPTHREADS "C++11 threads" ON)
+endif()
+
+if(WIN32 AND NOT QT)
+    # Force console subsystem when building the SDL frontend
+    set(CMAKE_WIN32_EXECUTABLE OFF CACHE BOOL "Build a Windows GUI executable" FORCE)
+endif()
+
+if(WIN32 AND GDBSTUB)
+    # Force console subsystem when building with GDBSTUB
+    set(CMAKE_WIN32_EXECUTABLE OFF CACHE BOOL "Build a Windows GUI executable" FORCE)
+endif()
+
+if(GDBSTUB)
+    if(NOT (ARCH STREQUAL "arm64"))
+        set(NEW_DYNAREC OFF CACHE BOOL "Use the PCem v15 (\"new\") dynamic recompiler" OFF)
+    endif()
+    set(DYNAREC OFF CACHE BOOL "Dynamic Recompiler" FORCE)
+endif()
+
+if(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+    SET(CMAKE_EXE_LINKER_FLAGS "-Wl,-z,wxneeded")
+endif()
+
+# Development branch features
+#
+#                      Option         Description                                Def.  Condition     Otherwise
+#                      ------         -----------                                ----  ------------  ---------
+cmake_dependent_option(AMD_K5         "AMD K5"                                   ON    "DEV_BRANCH"  OFF)
+cmake_dependent_option(G100           "Matrox Productiva G100"                   ON    "DEV_BRANCH"  OFF)
+cmake_dependent_option(ISAMEM_RAMPAGE "AST Rampage"                              ON    "DEV_BRANCH"  OFF)
+cmake_dependent_option(ISAMEM_IAB     "Intel Above Board"                        ON    "DEV_BRANCH"  OFF)
+cmake_dependent_option(ISAMEM_BRAT    "BocaRAM/AT"                               ON    "DEV_BRANCH"  OFF)
+cmake_dependent_option(OPL4ML         "OPL4-ML daughterboard"                    ON    "DEV_BRANCH"  OFF)
+cmake_dependent_option(SIO_DETECT     "Super I/O Detection Helper"               ON    "DEV_BRANCH"  OFF)
+cmake_dependent_option(WACOM          "Wacom Input Devices"                      ON    "DEV_BRANCH"  OFF)
+cmake_dependent_option(XL24           "ATI VGA Wonder XL24 (ATI-28800-6)"        ON    "DEV_BRANCH"  OFF)
+cmake_dependent_option(VFIO           "Virtual Function I/O"                     ON    "DEV_BRANCH"  OFF)
+cmake_dependent_option(SOFTMODEM      "AC'97 Softmodem"                          ON    "DEV_BRANCH"  OFF)
+
+# Ditto but for Qt
+if(QT)
+    option(USE_QT6 "Use Qt6 instead of Qt5" OFF)
+    if(APPLE)
+        option(MOLTENVK "Use MoltenVK libraries for Vulkan support on macOS. Requires a Vulkan-enabled QT." OFF)
+    endif()
+
+    option(LIBRASHADER "Build with librashader support" ON)
+
+    if(LIBRASHADER)
+        option(LIBRASHADER_STATIC "Statically link with librashader" OFF)
+        if(LIBRASHADER_STATIC)
+            option(LIBRASHADER_STATIC_FIND_LIB "Find static librashader library instead of building." OFF)
+            if (NOT LIBRASHADER_STATIC_FIND_LIB)
+                set(FETCHCONTENT_QUIET 0)
+                FetchContent_Declare(librashader
+                                    GIT_REPOSITORY https://github.com/SnowflakePowered/librashader.git
+                                    GIT_TAG f810cdf6e856e5a5215b1e84a21c978bc3367f23 GIT_SUBMODULES "" GIT_PROGRESS 1)
+                                    
+                FetchContent_Declare(corrosion
+                                    GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git
+                                    GIT_TAG c4786e7ae2d5ade784aca29448df362c874ed04e)
+
+                FetchContent_MakeAvailable(librashader corrosion)            
+                FetchContent_GetProperties(librashader SOURCE_DIR LIBRASHADER_SOURCE_DIR)
+                corrosion_import_crate(MANIFEST_PATH ${LIBRASHADER_SOURCE_DIR}/librashader-capi/Cargo.toml NO_DEFAULT_FEATURES FEATURES runtime-vulkan CRATE_TYPES staticlib)
+            endif()
+        endif()
+    endif()
+endif()
+
+# Determine the build type
+set(RELEASE_BUILD   OFF)
+set(BETA_BUILD      OFF)
+set(ALPHA_BUILD     OFF)
+
+string(TOLOWER "${BUILD_TYPE}" BUILD_TYPE_LOWER)
+if(BUILD_TYPE_LOWER STREQUAL "release")
+    # Release build
+    set(RELEASE_BUILD ON)
+    add_compile_definitions(RELEASE_BUILD)
+elseif(BUILD_TYPE_LOWER STREQUAL "beta")
+    # Beta build
+    set(BETA_BUILD ON)
+    add_compile_definitions(BETA_BUILD)
+elseif(BUILD_TYPE_LOWER STREQUAL "alpha")
+    # Alpha build
+    set(ALPHA_BUILD ON)
+    add_compile_definitions(ALPHA_BUILD)
+endif()
+
+# Versioning variables
+if(NOT CMAKE_PROJECT_VERSION_PATCH)
+    set(CMAKE_PROJECT_VERSION_PATCH 0)
+endif()
+if(NOT EMU_BUILD_NUM)
+    set(EMU_BUILD_NUM 0)
+endif()
+if(NOT EMU_COPYRIGHT_YEAR)
+    set(EMU_COPYRIGHT_YEAR 2026)
+endif()
+
+# Libasan
+if(LIBASAN)
+    add_compile_options(-fsanitize=address)
+    add_link_options(-fsanitize=address)
+endif()
+
+set(CMAKE_TOP_LEVEL_PROCESSED TRUE)
+
+# Android mobile profile. Desktop-only UI integrations remain disabled, while
+# v0.3.0 enables SDL3 Vulkan preference and real libslirp networking.
+if(ANDROID)
+    set(QT OFF CACHE BOOL "Use the Qt-based user interface" FORCE)
+    set(SDL2 OFF CACHE BOOL "Use SDL2 instead of SDL3" FORCE)
+    set(DISCORD OFF CACHE BOOL "Discord Rich Presence support" FORCE)
+    set(VNC OFF CACHE BOOL "VNC renderer" FORCE)
+    set(RTMIDI OFF CACHE BOOL "RtMidi" FORCE)
+    set(FLUIDSYNTH OFF CACHE BOOL "FluidSynth" FORCE)
+    set(MUNT OFF CACHE BOOL "MUNT" FORCE)
+    set(SOUNDCANVAS OFF CACHE BOOL "Sound Canvas (CLAP)" FORCE)
+    set(OPENAL ON CACHE BOOL "OpenAL" FORCE)
+    set(DYNAREC ON CACHE BOOL "Dynamic recompiler" FORCE)
+    set(CPPTHREADS ON CACHE BOOL "C++11 threads" FORCE)
+    if(NOT DEFINED ANDROID_REAL_SLIRP)
+        set(ANDROID_REAL_SLIRP ON CACHE BOOL "Use real libslirp networking on Android")
+    endif()
+
+    if(NOT DEFINED SDL3_SOURCE_DIR OR SDL3_SOURCE_DIR STREQUAL "")
+        message(FATAL_ERROR "Android build requires -DSDL3_SOURCE_DIR=<SDL3 source tree>")
+    endif()
+    # Windows -D cache values may contain backslashes. Normalize before SDL
+    # generates try_compile()/VerifyGlobs CMake scripts.
+    file(TO_CMAKE_PATH "${SDL3_SOURCE_DIR}" SDL3_SOURCE_DIR)
+    set(SDL3_SOURCE_DIR "${SDL3_SOURCE_DIR}" CACHE PATH "SDL3 source tree" FORCE)
+
+    if(NOT EXISTS "${SDL3_SOURCE_DIR}/CMakeLists.txt")
+        message(FATAL_ERROR "SDL3_SOURCE_DIR does not point to an SDL3 source tree: ${SDL3_SOURCE_DIR}")
+    endif()
+
+    # Build SDL from the same source revision whose Java glue is packaged by
+    # android/BUILD_APK.*.  This prevents SDL Java/native version mismatches.
+    set(SDL_TESTS OFF CACHE BOOL "" FORCE)
+    set(SDL_EXAMPLES OFF CACHE BOOL "" FORCE)
+    set(SDL_SHARED ON CACHE BOOL "" FORCE)
+    set(SDL_STATIC OFF CACHE BOOL "" FORCE)
+    add_subdirectory("${SDL3_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/SDL3" EXCLUDE_FROM_ALL)
+endif()
+
+add_subdirectory(src)

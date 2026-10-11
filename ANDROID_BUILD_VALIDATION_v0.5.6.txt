@@ -1,0 +1,11 @@
+86Box Android v0.5.6 build-script validation
+labels_missing: []
+has_classic_pkgconf: True
+has_ndk_alias: True
+vcpkg_env_uses_ndk_build: True
+cmake_chainload_uses_ndk_build: True
+cmake_android_ndk_uses_ndk_build: True
+version_name_056: True
+version_code_13: True
+
+Note: Full Gradle/NDK execution is not available in this environment. The fix is based on the real user build log where vcpkg reports embedded-space NDK tool paths immediately before gettext-libintl configure exits 77.

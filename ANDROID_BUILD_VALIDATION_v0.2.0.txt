@@ -1,0 +1,68 @@
+86Box Android v0.2.0 - Touch / Universal-64 Build Validation
+=============================================================
+
+Basis
+-----
+86Box 7.0 audited/fixed + Multi-Core Stage 1 + Android v0.1.1 Universal64.
+VersionCode: 3
+VersionName: 0.2.0
+Universal ABIs: arm64-v8a + x86_64
+
+Source/Structure Checks
+-----------------------
+[OK] AndroidManifest.xml parses as XML.
+[OK] strings.xml parses as XML.
+[OK] styles.xml parses as XML.
+[OK] BUILD_APK.bat labels/call-targets are internally consistent (22 labels).
+[OK] Java JNI declarations match C JNI exports exactly:
+     nativeControl, nativeLifecyclePause, nativeMountMedia.
+[OK] 13 Java CTRL_* values exactly match ANDROID_CTRL_* in android_bridge.h.
+[OK] v0.2.0 Gradle version/output names are synchronized.
+[OK] Java delimiter/parser structure check found no syntax-level parser problem.
+     Full javac compilation is not possible without Android/SDL Java classes.
+
+Native Checks
+-------------
+[OK] android_bridge.c GCC C11 syntax check (Android/JNI test headers).
+[OK] android_bridge.c Clang Static Analyzer: no warnings/errors.
+[OK] sdl_main.c Android preprocessor pass succeeds with test SDL headers.
+[OK] sdl_render.c Android preprocessor pass succeeds with test SDL headers.
+[OK] Android CMake branch configures/generates successfully with simulated dependency targets.
+[OK] Emulator-ready guard prevents very early Android lifecycle pause from waiting for an unstarted CPU thread.
+[OK] Persistent touch settings (mouse speed/tap/zoom) may be applied before SDL event-loop readiness.
+
+Implemented v0.2.0 Paths
+------------------------
+[OK] Touch mouse movement.
+[OK] Tap left click / two-finger right click.
+[OK] Touch L/R buttons with short native button pulses.
+[OK] Virtual relative mouse joystick.
+[OK] Mouse-speed range 25-300%.
+[OK] Pinch/display zoom 100-300%.
+[OK] Android soft keyboard request + SDL text-input bridge.
+[OK] Pause/resume and Home/background auto-pause behavior.
+[OK] Hard-reset confirmation + native reset action.
+[OK] Native 86Box SDL OSD/menu shortcut.
+[OK] Android SAF picker and private media import.
+[OK] Floppy 0 and CD-ROM 0 mount via SDL/86Box main-thread event.
+[OK] HDD import without unsafe hot-swap of fixed controller configuration.
+[OK] Scrollable/hideable right-side toolbar.
+
+Known Limitations
+-----------------
+[NOT TESTED] Real Gradle + Android NDK build in this execution environment:
+             Android SDK/NDK are not installed here.
+[NOT TESTED] ARM64 device runtime / Dynarec W^X behavior.
+[NOT TESTED] x86_64 Android emulator/device runtime.
+[DEFERRED] Android Vulkan renderer.
+[DEFERRED] libslirp networking.
+[DEFERRED] Multi-file CUE/BIN SAF import.
+[DEFERRED] Unicode/national IME key mapping.
+[DEFERRED] Zoom pan/scroll.
+[DEFERRED] live fixed-HDD reconfiguration UI.
+
+Expected APK Outputs on a configured Windows build machine
+----------------------------------------------------------
+86Box-Android-universal64-v0.2.0-debug.apk
+86Box-Android-arm64-v0.2.0-debug.apk
+86Box-Android-x86_64-v0.2.0-debug.apk

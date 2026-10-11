@@ -1,0 +1,43 @@
+86Box Android v0.9.9 - validation report
+Date: 2026-10-04
+Version: 0.9.9
+versionCode: 44
+
+Observed v0.9.8 runtime findings
+--------------------------------
+1. CPU 200 MHz and display scaling are confirmed fixed by user testing.
+2. Physical OnePlus mouse events reach Java and JNI/native 86Box:
+   HW_MOUSE_MOVE entries exist and mouse_ready=1.
+3. 86Box PS/2 mouse polling is gated by native mouse_capture/fullscreen state.
+   Android pointer capture was not mirrored into native mouse_capture, so guest
+   PS/2 packets could remain blocked even though host deltas reached 86Box.
+4. During the external CD file picker, Box86Activity was paused/stopped and the
+   app process disappeared. A new PID then opened ProfileManagerActivity.
+   This explains the live Win98 VM being lost merely by browsing and backing out.
+
+v0.9.9 changes
+--------------
+- New JNI/SDL event ANDROID_USER_EVENT_HW_MOUSE_CAPTURE.
+- Android pointer capture is mirrored into native 86Box mouse_capture.
+- InputManager.InputDeviceListener auto-detects connected USB/Bluetooth mice.
+- Existing physical mouse on VM resume/window focus is auto-captured.
+- Ctrl+Alt+G release path remains present.
+- New VmKeepAliveService (foregroundServiceType=specialUse) runs only while an
+  external VM file picker is open.
+- CD/floppy/diagnostic picker launches after a short keepalive promotion delay.
+- Keepalive is stopped on both successful selection and cancelled/back results.
+- Additional mouse/device/picker logs retained for follow-up diagnostics.
+
+Audit results
+-------------
+Round 1: PASS - manifest XML, versioning, JNI declarations/exports/event wiring.
+Round 2: PASS - mouse-capture dependency/path and picker keepalive control flow.
+Round 3: PASS - source diff scope, archive integrity, no empty source files or
+         duplicate archive paths.
+
+Environment limitation
+----------------------
+A complete Android APK build was not executed in this Linux audit environment
+because the project's Android SDK/NDK/SDL build toolchain is not installed here.
+Java parse smoke checks show only expected missing Android SDK symbols and no
+syntax-error patterns.

@@ -1,0 +1,24 @@
+86Box Android v0.9.16 validation
+================================
+Round 1 - UI/overlay state
+PASS: speed overlay defaults to 90% size and 60% background opacity.
+PASS: size range 60-160%, opacity 20-100%, free drag, relative position persistence, reset.
+PASS: speed overlay updater interval 1000 ms.
+PASS: IMPORT DESKTOP PROFILE label.
+PASS: Maximum requests nice=-10.
+PASS: Java lexical/string/brace structure.
+
+Round 2 - regressions/diff
+PASS: HostPerformanceTuner, VmKeepAliveService and android_bridge.h unchanged from v0.9.15.
+PASS: physical SDL-surface pointer capture retained.
+PASS: CD picker keepalive retained.
+PASS: non-blocking Android lifecycle retained.
+PASS: touch drag-and-drop retained.
+PASS: android_bridge.c differs from v0.9.15 only by Maximum nice -8 -> -10.
+PASS: versionName 0.9.16 / versionCode 51.
+PASS: standalone javac parser found no Java syntax-class errors (Android symbols unavailable in standalone host javac).
+
+Round 3 - packaging/integrity
+PASS: 2451 files present; no zero-byte source files; no case-insensitive path collisions.
+PASS: ZIP integrity test: No errors detected in compressed data of /mnt/data/86Box-Android-v0.9.16-COMPLETE.zip.
+SHA-256: 2730807f06741abd02801a1f54a3678176f87c46e53e063e20b3efb5906792be

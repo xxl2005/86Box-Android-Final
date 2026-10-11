@@ -1,0 +1,27 @@
+86Box 7.0 AUDIT VALIDATION
+Date: 2026-09-23
+
+Source changes: 15 files, 426 insertions, 175 deletions
+Grouped confirmed findings fixed: 30
+
+Compiler/static checks:
+- src/86box.c: GCC syntax PASS; Clang analyzer PASS
+- src/device.c: GCC syntax PASS; Clang analyzer PASS
+- src/utils/ini.c: GCC syntax PASS; Clang analyzer PASS
+- src/utils/log.c: GCC syntax PASS; Clang analyzer PASS
+- src/mem/rom.c: GCC syntax PASS; Clang analyzer PASS
+- src/disk/mo.c: GCC syntax PASS; Clang analyzer PASS
+- src/disk/rdisk.c: GCC syntax PASS; Clang analyzer PASS
+- src/unix/sdl_monitor.c: GCC syntax PASS; Clang analyzer PASS
+- src/floppy/fdd_86f.c: GCC syntax PASS with D86F_COMPRESS
+
+Patch validation:
+- patch --dry-run -p1 against untouched source: PASS (all 15 files)
+
+Full CMake build:
+- Not completed in this analysis container because development dependencies are absent.
+- First configure blocker: Freetype library/includes missing.
+- Qt6/Vulkan/SDL development packages are also absent.
+- This is an environment dependency limitation, not a detected source compile error.
+
+See 86Box-7.0-AUDIT_REPORT_DE.md for details and limitations.

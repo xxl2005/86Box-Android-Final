@@ -1,0 +1,21 @@
+86Box Android v0.9.28 validation
+================================
+Version: 0.9.28
+versionCode: 63
+
+Round 1
+- True Auto source assertions: PASS
+- Box86Activity structural scan: PASS
+- Thread Assist v2 Oryon topology simulation: PASS
+- Helper-pool clang -Wall -Wextra -Werror smoke test: PASS
+
+Round 2
+- Virtual keyboard + scaler unchanged: PASS
+- Floating game-key overlay unchanged: PASS
+- HostPerformanceTuner / ADPF unchanged: PASS
+- Keepalive/logger unchanged: PASS
+- CPPTHREADS registration (src/thread.cpp) unchanged: PASS
+- SDL CPU loop and Voodoo core unchanged: PASS
+
+Round 3
+- Version/package/source integrity checked before release ZIP.

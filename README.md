@@ -14,6 +14,10 @@ An independent Android port of [86Box](https://github.com/86Box/86Box), packaged
 - **PC configuration options** – Configure your emulated PC environment.
 - **Ongoing improvements** – Continued work on Android compatibility, performance, input handling, and usability.
 
+### Performance varies by device
+
+Emulation performance varies with the Android device's single-core CPU performance. In the project maintainer's experience, an emulated CPU setting of **66 MHz** was needed for good performance on a **OnePlus 15**. On a **Samsung Galaxy Tab S11 Ultra** with a **MediaTek processor**, **166 MHz** ran well. These are example settings; results also depend on the emulated PC and workload.
+
 ### Why I Created This Project
 
 I wanted to use 86Box on Android without being limited to a desktop PC.
@@ -85,6 +89,10 @@ The source package was audited before this publication, but this publication did
 - **Emulation klassischer PCs** – Ältere PC-Hardware und kompatible Betriebssysteme erleben.
 - **PC-Konfigurationsoptionen** – Die emulierte PC-Umgebung einrichten.
 - **Laufende Verbesserungen** – Weitere Arbeit an Android-Kompatibilität, Leistung, Eingabe und Bedienbarkeit.
+
+### Leistung je nach Gerät
+
+Die Emulationsleistung hängt von der Single-Core-Leistung des Android-Geräts ab. Nach den Erfahrungen des Projektbetreibers war auf einem **OnePlus 15** eine Einstellung der emulierten CPU auf **66 MHz** nötig, um eine gute Leistung zu erreichen. Auf einem **Samsung Galaxy Tab S11 Ultra** mit **MediaTek-Prozessor** lief die Emulation mit **166 MHz** gut. Das sind Beispiele; die Ergebnisse hängen auch vom emulierten PC und der ausgeführten Software ab.
 
 ### Warum ich dieses Projekt erstellt habe
 

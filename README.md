@@ -2,6 +2,26 @@
 
 An independent Android port of [86Box](https://github.com/86Box/86Box), packaged here as the **v0.11.1 Preview**. This repository contains all application and emulator source files from the prepared v0.11.1 package, including the Android app, native core, build scripts, tests, and bundled third-party source. Six GitHub Actions workflow definitions from the ZIP are omitted. The original upstream README is preserved as [README_UPSTREAM.md](README_UPSTREAM.md).
 
+## Main Features
+
+- **Native Android application** – Run 86Box directly on Android devices.
+- **Universal APK** – One installation package for multiple supported Android CPU architectures.
+- **Physical mouse support** – Designed for proper mouse interaction with emulated PCs.
+- **Physical keyboard support** – Use external USB or Bluetooth keyboards.
+- **Customizable Game-Key Overlay** – Add, remove, and configure on-screen keys for DOS and classic PC games.
+- **Adjustable on-screen controls** – Customize the size and appearance of virtual controls.
+- **Classic PC emulation** – Experience vintage PC hardware and compatible operating systems.
+- **PC configuration options** – Configure your emulated PC environment.
+- **Ongoing improvements** – Continued work on Android compatibility, performance, input handling, and usability.
+
+### Why I Created This Project
+
+I wanted to use 86Box on Android without being limited to a desktop PC.
+
+One of my biggest priorities was making physical mouse and keyboard input practical, while also providing customizable touch controls for mobile gaming.
+
+The project has required a lot of experimentation, especially with Android-specific input handling, display behavior, and performance.
+
 ## Screenshots
 
 <table>
@@ -53,6 +73,26 @@ The source package was audited before this publication, but this publication did
 # Deutsch
 
 **86Box Android Final** ist ein unabhängiger Android-Port von [86Box](https://github.com/86Box/86Box). Hier wird er als **v0.11.1 Preview** bereitgestellt. Das Repository enthält alle App- und Emulator-Quelldateien des vorbereiteten v0.11.1-Pakets: Android-App, nativen Kern, Build-Skripte, Tests und mitgelieferten Quellcode von Drittkomponenten. Sechs GitHub-Actions-Workflowdefinitionen aus dem ZIP sind ausgenommen. Die ursprüngliche README liegt unter [README_UPSTREAM.md](README_UPSTREAM.md).
+
+## Hauptfunktionen
+
+- **Native Android-App** – 86Box direkt auf Android-Geräten ausführen.
+- **Universelle APK** – Ein Installationspaket für mehrere unterstützte Android-Prozessorarchitekturen.
+- **Unterstützung für physische Mäuse** – Mausbedienung für emulierte PCs.
+- **Unterstützung für physische Tastaturen** – Externe USB- oder Bluetooth-Tastaturen verwenden.
+- **Anpassbares Spieltasten-Overlay** – Bildschirmtasten für DOS- und klassische PC-Spiele hinzufügen, entfernen und konfigurieren.
+- **Anpassbare Bildschirmsteuerung** – Größe und Erscheinungsbild der virtuellen Bedienelemente einstellen.
+- **Emulation klassischer PCs** – Ältere PC-Hardware und kompatible Betriebssysteme erleben.
+- **PC-Konfigurationsoptionen** – Die emulierte PC-Umgebung einrichten.
+- **Laufende Verbesserungen** – Weitere Arbeit an Android-Kompatibilität, Leistung, Eingabe und Bedienbarkeit.
+
+### Warum ich dieses Projekt erstellt habe
+
+Ich wollte 86Box auch auf Android nutzen können, ohne auf einen Desktop-PC angewiesen zu sein.
+
+Besonders wichtig war mir, die Bedienung mit einer physischen Maus und Tastatur praxistauglich zu machen und zugleich anpassbare Touch-Steuerungen für Spiele anzubieten.
+
+Das Projekt erforderte viel Experimentierarbeit, vor allem bei der Eingabeverarbeitung, der Anzeige und der Leistung unter Android.
 
 ## Bilder
 

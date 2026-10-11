@@ -2,6 +2,21 @@
 
 An independent Android port of [86Box](https://github.com/86Box/86Box), packaged here as the **v0.11.1 Preview**. This repository contains all application and emulator source files from the prepared v0.11.1 package, including the Android app, native core, build scripts, tests, and bundled third-party source. Six GitHub Actions workflow definitions from the ZIP are omitted. The original upstream README is preserved as [README_UPSTREAM.md](README_UPSTREAM.md).
 
+## Screenshots
+
+<table>
+  <tr>
+    <td><a href="docs/screenshots/01-win98-desktop.jpg"><img src="docs/screenshots/01-win98-desktop.jpg" alt="Emulated desktop with Android touch controls"></a><br>Emulated desktop and touch controls</td>
+    <td><a href="docs/screenshots/02-hardware-profiles.jpg"><img src="docs/screenshots/02-hardware-profiles.jpg" alt="Hardware profile manager"></a><br>Hardware profiles</td>
+  </tr>
+  <tr>
+    <td><a href="docs/screenshots/03-hardware-configurator.jpg"><img src="docs/screenshots/03-hardware-configurator.jpg" alt="Hardware configurator"></a><br>Hardware configurator</td>
+    <td><a href="docs/screenshots/12-game-key-overlay.jpg"><img src="docs/screenshots/12-game-key-overlay.jpg" alt="Customizable game key overlay"></a><br>Customizable game controls</td>
+  </tr>
+</table>
+
+[View all 13 screenshots](SCREENSHOTS.md). Guest operating systems and games shown are examples; they are not included with the app.
+
 ## Download and install
 
 Download the [universal Android APK](https://github.com/xxl2005/86Box-Android-Final/releases/download/v0.11.1-preview/86Box-Android-v0.11.1-Final.apk) from the [v0.11.1 Preview release](https://github.com/xxl2005/86Box-Android-Final/releases/tag/v0.11.1-preview). It contains native libraries for **arm64-v8a** and **x86_64**, and requires **Android 9 (API 28) or newer**.
@@ -38,6 +53,10 @@ The source package was audited before this publication, but this publication did
 # Deutsch
 
 **86Box Android Final** ist ein unabhängiger Android-Port von [86Box](https://github.com/86Box/86Box). Hier wird er als **v0.11.1 Preview** bereitgestellt. Das Repository enthält alle App- und Emulator-Quelldateien des vorbereiteten v0.11.1-Pakets: Android-App, nativen Kern, Build-Skripte, Tests und mitgelieferten Quellcode von Drittkomponenten. Sechs GitHub-Actions-Workflowdefinitionen aus dem ZIP sind ausgenommen. Die ursprüngliche README liegt unter [README_UPSTREAM.md](README_UPSTREAM.md).
+
+## Bilder
+
+Die Beispielbilder oben zeigen unter anderem den emulierten Desktop, Hardwareprofile, den Hardwarekonfigurator und die anpassbare Spielsteuerung. [Alle 13 Screenshots ansehen](SCREENSHOTS.md). Die abgebildeten Gastbetriebssysteme und Spiele sind Beispiele und nicht in der App enthalten.
 
 ## Herunterladen und installieren
 

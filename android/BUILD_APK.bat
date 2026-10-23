@@ -195,6 +195,11 @@ rem vcpkg/Autotools expands 8.3 names and junctions back to the physical SDK pat
 rem If that path contains spaces (for example C:\Users\Example User\...), configure can fail.
 rem Use a REAL NDK copy at a path with no spaces; this is intentionally not a junction.
 set "NDK_BUILD="
+if "!NDK: =!"=="!NDK!" (
+    set "NDK_BUILD=!NDK!"
+    echo [OK] SDK-NDK ohne Leerzeichen: !NDK_BUILD!
+    exit /b 0
+)
 set "NDK_LOCAL="
 for %%D in ("%ROOT%") do set "ROOT_DRIVE=%%~dD"
 if defined ROOT_DRIVE set "NDK_LOCAL=!ROOT_DRIVE!\86BoxAndroidToolchains\ndk-%NDK_VERSION%"

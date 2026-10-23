@@ -30,6 +30,11 @@ jobs:
       - name: Build complete native core and universal APK
         shell: cmd
         run: android\BUILD_APK.bat build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: 86Box-Android-v0.11.3-preview-build
+          path: 86Box-Android-universal64-v0.11.3-debug.apk
+          if-no-files-found: error
       - name: Check APK identity and architectures
         shell: pwsh
         run: |
@@ -42,12 +47,14 @@ jobs:
           if ($badgeText -notmatch "versionCode='85'") { throw 'Wrong version code' }
           if ($badgeText -notmatch "versionName='0.11.3'") { throw 'Wrong version name' }
           if ($badgeText -notmatch "application-label:'86Box Android'") { throw 'Wrong app label' }
-          $names = (& 7z l -slt $apk) -join "`n"
-          if ($names -notmatch 'lib/arm64-v8a/libmain.so') { throw 'ARM64 core missing' }
-          if ($names -notmatch 'lib/x86_64/libmain.so') { throw 'x86_64 core missing' }
-      - uses: actions/upload-artifact@v4
-        with:
-          name: 86Box-Android-v0.11.3-preview-build
-          path: 86Box-Android-universal64-v0.11.3-debug.apk
-          if-no-files-found: error
+          $zip = [System.IO.Compression.ZipFile]::OpenRead((Resolve-Path -LiteralPath $apk).Path)
+          try {
+            $names = @($zip.Entries | ForEach-Object { $_.FullName })
+            $cores = @($names | Where-Object { $_ -match '^lib/[^/]+/libmain\.so$' })
+            Write-Host ('Native cores: ' + ($cores -join ', '))
+            if ($names -notcontains 'lib/arm64-v8a/libmain.so') { throw 'ARM64 core missing' }
+            if ($names -notcontains 'lib/x86_64/libmain.so') { throw 'x86_64 core missing' }
+          } finally {
+            $zip.Dispose()
+          }
 

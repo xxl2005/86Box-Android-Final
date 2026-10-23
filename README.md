@@ -2,6 +2,10 @@
 
 An independent Android port of [86Box](https://github.com/86Box/86Box), packaged here as the **v0.11.2 Preview**. This repository contains all application and emulator source files from the prepared v0.11.1 package, plus the v0.11.2 Android app name correction, including the Android app, native core, build scripts, tests, and bundled third-party source. Six GitHub Actions workflow definitions from the ZIP are omitted. The original upstream README is preserved as [README_UPSTREAM.md](README_UPSTREAM.md).
 
+## Current working source (v0.11.3, not yet released)
+
+This source archive adds optional left/right **mouse buttons** to the Game-Key Overlay, including MOVE/HOLD, individual sizing, multitouch, and safe ownership when a physical mouse is also in use. Android app `versionCode` is now 85 and `versionName` is `0.11.3`. **This change has not been compiled into an APK or tested on a real Android device.** The published v0.11.2 APK linked below does not contain the new buttons. See [v0.11.3 changes (German)](ANDROID_V0.11.3_GAME_KEY_MOUSE_BUTTONS_DE.md).
+
 ## Main Features
 
 - **Native Android application** – Run 86Box directly on Android devices.
@@ -78,6 +82,10 @@ The original source package was audited before publication. The v0.11.2 APK was 
 # Deutsch
 
 **86Box Android Final** ist ein unabhängiger Android-Port von [86Box](https://github.com/86Box/86Box). Hier wird er als **v0.11.2 Preview** bereitgestellt. Das Repository enthält alle App- und Emulator-Quelldateien des vorbereiteten v0.11.1-Pakets sowie die v0.11.2-Korrektur des Android-Appnamens: Android-App, nativen Kern, Build-Skripte, Tests und mitgelieferten Quellcode von Drittkomponenten. Sechs GitHub-Actions-Workflowdefinitionen aus dem ZIP sind ausgenommen. Die ursprüngliche README liegt unter [README_UPSTREAM.md](README_UPSTREAM.md).
+
+## Aktueller Quellcode (v0.11.3, noch nicht veröffentlicht)
+
+Der bereitgestellte **Quellcode** enthält jetzt linke und rechte Maustasten im Game-Key-Overlay (optional, mit MOVE/HOLD, individueller Größe und Multi-Touch). Die Android-App-Version ist `0.11.3` (Code 85). **Es wurde noch keine neue APK erstellt und kein Gerätetest durchgeführt.** Der unten verlinkte veröffentlichte v0.11.2-APK-Download enthält die neuen Maustasten nicht. Siehe [Änderungen v0.11.3](ANDROID_V0.11.3_GAME_KEY_MOUSE_BUTTONS_DE.md).
 
 ## Hauptfunktionen
 

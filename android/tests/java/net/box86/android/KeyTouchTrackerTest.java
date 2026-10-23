@@ -25,6 +25,16 @@ public final class KeyTouchTrackerTest {
         check("pointer IDs may be reused after up", tracker.capture(2, "SPACE"));
         tracker.clear();
         check("clear cancels all pointers", tracker.pointerIds().isEmpty());
+        check("mouse-left captured", tracker.capture(3, "MOUSE_LEFT"));
+        check("mouse-right captured at same time", tracker.capture(5, "MOUSE_RIGHT"));
+        check("second finger can hold mouse-left", tracker.capture(7, "MOUSE_LEFT"));
+        check("first left released", "MOUSE_LEFT".equals(tracker.release(3)));
+        check("second left finger keeps left pressed", tracker.anyPointerOnKey("MOUSE_LEFT"));
+        check("right still held independently", tracker.anyPointerOnKey("MOUSE_RIGHT"));
+        check("last left released", "MOUSE_LEFT".equals(tracker.release(7)));
+        check("right not accidentally released", tracker.anyPointerOnKey("MOUSE_RIGHT"));
+        check("right released", "MOUSE_RIGHT".equals(tracker.release(5)));
+        check("no mouse fingers remain", tracker.pointerIds().isEmpty());
         System.out.println("PASS: " + cases + " key-pointer ownership cases");
     }
 }

@@ -147,7 +147,9 @@ public final class Box86Activity extends SDLActivity {
     private boolean activityDestroyed = false;
     private boolean hardwareMouseCaptured = false;
     private View hardwareMouseCaptureTarget;
-    private int hardwareButtonsDown = 0;
+    // Merge physical and overlay mouse button owners; one source must not release
+    // a button which the other source is still holding.
+    private final MouseButtonSources mouseButtonSources = new MouseButtonSources();
     private float lastHardwareMouseX = Float.NaN;
     private float lastHardwareMouseY = Float.NaN;
     private float hardwareDxRemainder = 0f;
@@ -1378,9 +1380,14 @@ public final class Box86Activity extends SDLActivity {
 
     private void createFloatingKeyOverlay() {
         if (overlayRoot == null || floatingKeyOverlay != null) return;
-        floatingKeyOverlay = new FloatingKeyOverlayView(this, (xtCode, down) -> {
-            try { nativeHardwareKey(xtCode, down); }
-            catch (UnsatisfiedLinkError e) { DiagnosticLogger.w(TAG, "Floating key overlay bridge not ready", e); }
+        floatingKeyOverlay = new FloatingKeyOverlayView(this, new FloatingKeyOverlayView.Listener() {
+            @Override public void onKey(int xtCode, boolean down) {
+                sendHardwareKey(xtCode, down);
+            }
+            @Override public void onMouseButton(int buttonMask, boolean down) {
+                mouseButtonSources.setOverlayButton(buttonMask, down,
+                        Box86Activity.this::sendHardwareMouseButton);
+            }
         }, prefs, germanKeyboard);
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.START | Gravity.TOP);
@@ -2676,12 +2683,7 @@ public final class Box86Activity extends SDLActivity {
         else if (event.getActionMasked() == MotionEvent.ACTION_UP || event.getActionMasked() == MotionEvent.ACTION_CANCEL)
             now = 0;
 
-        int changed = hardwareButtonsDown ^ now;
-        for (int bit : new int[] {1, 2, 4, 8, 16}) {
-            if ((changed & bit) != 0)
-                sendHardwareMouseButton(bit, (now & bit) != 0);
-        }
-        hardwareButtonsDown = now;
+        mouseButtonSources.setPhysicalMask(now, this::sendHardwareMouseButton);
     }
 
     private void handlePhysicalMouseWheel(MotionEvent event) {
@@ -2733,19 +2735,16 @@ public final class Box86Activity extends SDLActivity {
     }
 
     private void releaseHardwareButtons() {
-        if (hardwareButtonsDown == 0)
-            return;
-        for (int bit : new int[] {1, 2, 4, 8, 16}) {
-            if ((hardwareButtonsDown & bit) != 0)
-                sendHardwareMouseButton(bit, false);
-        }
-        hardwareButtonsDown = 0;
+        mouseButtonSources.setPhysicalMask(0, this::sendHardwareMouseButton);
     }
 
     private void releaseHardwareInput() {
+        // RELEASE_ALL affects mouse and keyboard in native 86Box, not only
+        // physical devices. End overlay holds too to keep Java/native in sync.
+        releaseFloatingKeyOverlayKeys();
         hardwarePressedXt.clear();
         suppressMouseReleaseG = false;
-        hardwareButtonsDown = 0;
+        mouseButtonSources.reset();
         resetHardwareMouseTracking();
         try {
             nativeHardwareReleaseAll();

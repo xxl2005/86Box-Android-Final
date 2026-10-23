@@ -380,6 +380,9 @@ static float    android_pinch_start_cy = 0.0f;
 static int      android_pinch_start_pan_x = 0;
 static int      android_pinch_start_pan_y = 0;
 static int      android_mouse_release_mask = 0;
+/* Mouse keys and physical mouse are forwarded through the same Java bridge.
+ * Preserve their combined held state when touchscreen click/drag pulses end. */
+static int      android_hw_mouse_button_mask = 0;
 static uint64_t android_mouse_release_deadline = 0;
 static int      android_touch_long_press_fired = 0;
 static int      android_touch_left_drag_active = 0;
@@ -502,7 +505,7 @@ android_touch_set_left_drag(int down)
             android_mouse_release_deadline = 0;
         mouse_set_buttons_ex(buttons | 1);
     } else {
-        mouse_set_buttons_ex(buttons & ~1);
+        mouse_set_buttons_ex((buttons & ~1) | (android_hw_mouse_button_mask & 1));
     }
     SDL_UnlockMutex(mousemutex);
 
@@ -531,7 +534,9 @@ android_release_due_buttons(void)
     if (!android_mouse_release_mask || SDL_GetTicks() < android_mouse_release_deadline || !mousemutex)
         return;
     SDL_LockMutex(mousemutex);
-    mouse_set_buttons_ex(mouse_get_buttons_ex() & ~android_mouse_release_mask);
+    mouse_set_buttons_ex((mouse_get_buttons_ex() & ~android_mouse_release_mask) |
+                         (android_hw_mouse_button_mask & android_mouse_release_mask) |
+                         (android_touch_left_drag_active ? 1 : 0));
     SDL_UnlockMutex(mousemutex);
     android_mouse_release_mask = 0;
     android_mouse_release_deadline = 0;
@@ -1039,6 +1044,10 @@ android_handle_user_event(SDL_Event *event, int *flag_osd_open)
     } else if (event->user.code == ANDROID_USER_EVENT_HW_MOUSE_BUTTON) {
         const int mask = (int) (intptr_t) event->user.data1;
         const int down = (int) (intptr_t) event->user.data2;
+        if (mask) {
+            if (down) android_hw_mouse_button_mask |= mask;
+            else android_hw_mouse_button_mask &= ~mask;
+        }
         if (android_hw_mouse_trace_budget > 0) {
             --android_hw_mouse_trace_budget;
             pclog("[ANDROID][INPUT] HW_MOUSE_BUTTON mask=%d down=%d mouse_ready=%d\n",
@@ -1049,7 +1058,9 @@ android_handle_user_event(SDL_Event *event, int *flag_osd_open)
             if (down)
                 mouse_set_buttons_ex(mouse_get_buttons_ex() | mask);
             else
-                mouse_set_buttons_ex(mouse_get_buttons_ex() & ~mask);
+                mouse_set_buttons_ex((mouse_get_buttons_ex() & ~mask) |
+                                     ((android_touch_left_drag_active ? 1 : 0) & mask) |
+                                     (android_mouse_release_mask & mask));
             SDL_UnlockMutex(mousemutex);
         }
     } else if (event->user.code == ANDROID_USER_EVENT_HW_MOUSE_WHEEL) {
@@ -1074,6 +1085,10 @@ android_handle_user_event(SDL_Event *event, int *flag_osd_open)
               captured, mouse_capture);
     } else if (event->user.code == ANDROID_USER_EVENT_HW_RELEASE_ALL) {
         keyboard_all_up();
+        android_hw_mouse_button_mask = 0;
+        android_mouse_release_mask = 0;
+        android_mouse_release_deadline = 0;
+        android_touch_left_drag_active = 0;
         if (mousemutex) {
             SDL_LockMutex(mousemutex);
             mouse_set_buttons_ex(0);

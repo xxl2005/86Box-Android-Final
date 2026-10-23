@@ -39,6 +39,7 @@ import java.util.Set;
 final class FloatingKeyOverlayView extends FrameLayout {
     interface Listener {
         void onKey(int xtCode, boolean down);
+        void onMouseButton(int buttonMask, boolean down);
     }
 
     private static final String PREF_KEYS = "floating_key_overlay_keys";
@@ -56,7 +57,13 @@ final class FloatingKeyOverlayView extends FrameLayout {
     private static final class KeySpec {
         final String id;
         final int xt;
-        KeySpec(String id, int xt) { this.id = id; this.xt = xt; }
+        final int mouseMask;
+        KeySpec(String id, int xt) { this(id, xt, 0); }
+        KeySpec(String id, int xt, int mouseMask) {
+            this.id = id;
+            this.xt = xt;
+            this.mouseMask = mouseMask;
+        }
     }
 
     private static final KeySpec[] KEY_SPECS = new KeySpec[] {
@@ -78,7 +85,9 @@ final class FloatingKeyOverlayView extends FrameLayout {
             new KeySpec("F9",0x43), new KeySpec("F10",0x44), new KeySpec("F11",0x57), new KeySpec("F12",0x58),
             new KeySpec("UP",0x148), new KeySpec("DOWN",0x150), new KeySpec("LEFT",0x14b), new KeySpec("RIGHT",0x14d),
             new KeySpec("INS",0x152), new KeySpec("DEL",0x153), new KeySpec("HOME",0x147), new KeySpec("END",0x14f),
-            new KeySpec("PGUP",0x149), new KeySpec("PGDN",0x151)
+            new KeySpec("PGUP",0x149), new KeySpec("PGDN",0x151),
+            // 86Box mouse masks: 1 = left, 2 = right. Never send these as XT scancodes.
+            new KeySpec("MOUSE_LEFT", 0, 1), new KeySpec("MOUSE_RIGHT", 0, 2)
     };
 
     private final Activity activity;
@@ -143,7 +152,7 @@ final class FloatingKeyOverlayView extends FrameLayout {
         content.setBackgroundColor(0xff151515);
 
         TextView info = new TextView(activity);
-        info.setText("Choose individual in-game keys. HOLD = tap once to keep the PC key pressed, tap again to release it. Use − / + to make each key smaller or larger independently. Enable MOVE MODE to drag buttons to any position.");
+        info.setText("Choose individual in-game keyboard keys and MOUSE LEFT / MOUSE RIGHT. A mouse button clicks while touched; HOLD = tap once to keep a keyboard or mouse button pressed, tap again to release. Use − / + for each button size. Enable MOVE MODE to drag buttons to any position.");
         info.setTextColor(0xffd8d8d8);
         info.setTextSize(13);
         info.setPadding(0, 0, 0, dp(8));
@@ -384,6 +393,8 @@ final class FloatingKeyOverlayView extends FrameLayout {
     private Button createButton(KeySpec spec, int ordinal) {
         Button b = new Button(activity);
         b.setText(displayLabel(spec));
+        b.setContentDescription(spec.mouseMask == 1 ? "Left mouse button" :
+                spec.mouseMask == 2 ? "Right mouse button" : displayLabel(spec));
         b.setTextColor(Color.WHITE);
         b.setAllCaps(false);
         b.setPadding(dp(3), 0, dp(3), 0);
@@ -546,7 +557,10 @@ final class FloatingKeyOverlayView extends FrameLayout {
     }
 
     private void safeSend(KeySpec spec, boolean down) {
-        try { listener.onKey(resolveXt(spec), down); } catch (Throwable ignored) { }
+        try {
+            if (spec.mouseMask != 0) listener.onMouseButton(spec.mouseMask, down);
+            else listener.onKey(resolveXt(spec), down);
+        } catch (Throwable ignored) { }
     }
 
     private int resolveXt(KeySpec spec) {
@@ -562,6 +576,8 @@ final class FloatingKeyOverlayView extends FrameLayout {
             case "DOWN": return "↓";
             case "LEFT": return "←";
             case "RIGHT": return "→";
+            case "MOUSE_LEFT": return german ? "MAUS L" : "L-CLICK";
+            case "MOUSE_RIGHT": return german ? "MAUS R" : "R-CLICK";
             default: return spec.id;
         }
     }

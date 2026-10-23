@@ -1,0 +1,9 @@
+86Box Android v0.11.3 – Game-Key-Overlay Mouse Button Validation (2026-10-23)
+------------------------------------------------------------------------
+Source modification: L-CLICK/R-CLICK, MOVE/HOLD/size, mouse state merge
+Host Java validation:
+PASS: 25 key-pointer ownership cases
+PASS: 10 touchscreen action cases
+PASS: 12 independent mouse-button source cases
+Android build: NOT RUN (Android SDK/NDK and Gradle unavailable in this environment).
+On-device functional test: NOT RUN (requires APK + Android device).

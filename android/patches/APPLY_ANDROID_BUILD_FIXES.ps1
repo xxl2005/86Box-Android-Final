@@ -9,12 +9,16 @@ $rootPath = (Resolve-Path $Root).Path
 $sdlCmake = Join-Path $rootPath 'third_party_android\SDL\CMakeLists.txt'
 $vcpkg = Join-Path $rootPath 'third_party_android\vcpkg'
 $glibPort = Join-Path $vcpkg 'ports\glib\portfile.cmake'
+$mesonPortConfig = Join-Path $vcpkg 'ports\vcpkg-tool-meson\vcpkg-port-config.cmake'
 
 if (-not (Test-Path -LiteralPath $sdlCmake)) {
     throw "SDL CMakeLists.txt nicht gefunden: $sdlCmake"
 }
 if (-not (Test-Path -LiteralPath $glibPort)) {
     throw "vcpkg GLib portfile.cmake nicht gefunden: $glibPort"
+}
+if (-not (Test-Path -LiteralPath $mesonPortConfig)) {
+    throw "vcpkg Meson port config nicht gefunden: $mesonPortConfig"
 }
 
 $nativeBuildNeedsReset = $false
@@ -150,6 +154,43 @@ endif()
     Write-Host '[OK] GLib Android/Windows-Host Fix bereits vorhanden.'
 }
 
+# Meson 1.12 validates --prefix using Android (POSIX) host path semantics.
+# vcpkg stages Android packages on the Windows build machine at D:/... paths.
+# Accept those absolute Windows paths before Meson's POSIX-only check.
+$mesonMarker = '# 86BOX_ANDROID_MESON_WINDOWS_PREFIX_FIX'
+$mesonConfigText = [System.IO.File]::ReadAllText($mesonPortConfig)
+if (-not $mesonConfigText.Contains($mesonMarker)) {
+    $mesonNeedle = '    file(MAKE_DIRECTORY "${path_to_search}")'
+    if (-not $mesonConfigText.Contains($mesonNeedle)) {
+        throw 'vcpkg Meson port insertion point not found.'
+    }
+    $mesonFix = @'
+    # 86BOX_ANDROID_MESON_WINDOWS_PREFIX_FIX
+    if(CMAKE_HOST_WIN32)
+        set(_86BOX_OPTIONS_PY "${path_to_search}-tmp/meson-${ref}/mesonbuild/options.py")
+        file(READ "${_86BOX_OPTIONS_PY}" _86BOX_OPTIONS_TEXT)
+        set(_86BOX_OLD "        path_obj = self.pure_path_class(path)")
+        set(_86BOX_NEW "        if pathlib.PureWindowsPath(path).is_absolute():\n            return True\n        path_obj = self.pure_path_class(path)")
+        string(FIND "${_86BOX_OPTIONS_TEXT}" "${_86BOX_OLD}" _86BOX_POS)
+        if(_86BOX_POS EQUAL -1)
+            message(FATAL_ERROR "86Box Meson Windows prefix fix: expected path check not found")
+        endif()
+        string(REPLACE "${_86BOX_OLD}" "${_86BOX_NEW}" _86BOX_OPTIONS_TEXT "${_86BOX_OPTIONS_TEXT}")
+        file(WRITE "${_86BOX_OPTIONS_PY}" "${_86BOX_OPTIONS_TEXT}")
+        unset(_86BOX_OPTIONS_PY)
+        unset(_86BOX_OPTIONS_TEXT)
+        unset(_86BOX_OLD)
+        unset(_86BOX_NEW)
+        unset(_86BOX_POS)
+    endif()
+'@
+    $mesonConfigText = $mesonConfigText.Replace($mesonNeedle, "$mesonFix`r`n$mesonNeedle")
+    [System.IO.File]::WriteAllText($mesonPortConfig, $mesonConfigText, [System.Text.UTF8Encoding]::new($false))
+    Write-Host '[OK] Meson Windows-Host Android-Pfadfix eingetragen.'
+} else {
+    Write-Host '[OK] Meson Windows-Host Android-Pfadfix bereits vorhanden.'
+}
+
 if ($nativeBuildNeedsReset) {
     $buildDirs = @(
         (Join-Path $rootPath 'build-android-arm64'),
@@ -165,3 +206,4 @@ if ($nativeBuildNeedsReset) {
 }
 
 Write-Host '[OK] Android Build-Kompatibilitaetsfixes bereit.'
+

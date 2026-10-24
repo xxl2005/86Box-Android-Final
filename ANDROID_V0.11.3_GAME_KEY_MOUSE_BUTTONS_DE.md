@@ -16,8 +16,8 @@
 
 ## Build-Status
 - Reine Java-Eingabe- und Touchtracking-Tests wurden auf der Host-JVM ausgeführt.
-- Android SDK/NDK und Gradle sind in dieser Umgebung nicht eingerichtet. Deshalb **noch keine APK kompiliert und kein Android-Gerätetest ausgeführt**.
-- Mit `android\BUILD_APK.bat` kann eine neue APK für die bereits konfigurierte Projektumgebung erstellt werden. Versionsnummer 0.11.3, Buildcode 85.
+- Der vollständige Android-Build wurde in [GitHub Actions](https://github.com/xxl2005/86Box-Android-Final/actions/runs/40042627752) mit SDK 35, NDK r28c und Gradle 8.13 erfolgreich abgeschlossen.
+- Die [v0.11.3-Preview-APK](https://github.com/xxl2005/86Box-Android-Final/releases/tag/v0.11.3-preview) wurde auf App-Namen, Versionsnummer 0.11.3 (Buildcode 85), beide Prozessorarchitekturen und Signatur geprüft. Ein Android-Gerätetest wurde nicht durchgeführt.
 
 ## Codeänderungen
 - `FloatingKeyOverlayView.java`: zwei Mouse-KeySpecs, echte Maustastenereignisse, Labels, Einstellungen und unabhängiges Touchtracking.
@@ -26,4 +26,5 @@
 - `src/unix/sdl_main.c`: SDL-Touch-Klickpuls und Touch-Drag dürfen einen weiterhin gedrückten Overlay-Mausbutton nicht vorzeitig freigeben.
 - `MouseButtonSourcesTest.java`: Host-JDK-Tests der Linksklick/Rechtsklick-Eingaben und Eigentümerwechsel.
 
-Nicht geändert: 86Box-CPU-Kern, GPU-Renderer, grundlegende SDL-Maustouch-Gesten, Build-Toolchain, übrige Game-Keys.
+Die Game-Key-Erweiterung ändert den 86Box-CPU-Kern, GPU-Renderer und die übrigen Game-Keys nicht. Für den reproduzierbaren APK-Build wurden zusätzliche Windows-Build-Kompatibilitätskorrekturen ergänzt.
+

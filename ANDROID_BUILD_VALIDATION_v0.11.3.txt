@@ -5,5 +5,11 @@ Host Java validation:
 PASS: 25 key-pointer ownership cases
 PASS: 10 touchscreen action cases
 PASS: 12 independent mouse-button source cases
-Android build: NOT RUN (Android SDK/NDK and Gradle unavailable in this environment).
+Android build: PASS (GitHub Actions run 40042627752; Android SDK 35, NDK r28c, Gradle 8.13).
+Universal APK: PASS (versionCode 85, versionName 0.11.3, label 86Box Android,
+  Android 9+, arm64-v8a and x86_64 native libraries, ZIP alignment).
+APK signature: PASS (same debug certificate as v0.11.2 Preview).
+Release APK SHA-256: 4d5a963e77093735ceedfed689ac29027c5113d62c3a5bf67584a32a6d8b984a
+Release: https://github.com/xxl2005/86Box-Android-Final/releases/tag/v0.11.3-preview
 On-device functional test: NOT RUN (requires APK + Android device).
+

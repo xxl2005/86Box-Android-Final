@@ -30,7 +30,7 @@ jobs:
       - name: Build complete native core and universal APK
         shell: cmd
         run: android\BUILD_APK.bat build
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: 86Box-Android-v0.11.3-preview-build
           path: 86Box-Android-universal64-v0.11.3-debug.apk
